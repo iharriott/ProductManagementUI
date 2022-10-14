@@ -1,0 +1,274 @@
+<h2 class="uploader">{{ formTitle }}</h2>
+
+<!-- Upload  -->
+<div *ngIf="showHideLoader">
+    <form id="file-upload-form" class="uploader">
+        <input
+            id="file-upload"
+            type="file"
+            name="fileUpload"
+            accept=".xls,.xlsx, .csv"
+            (change)="fileUpload($event)"
+            style="display: none"
+        />
+        <label
+            for="file-upload"
+            id="file-drag"
+            #dropTarget
+            (dragover)="allowDrop($event)"
+            (drop)="drop($event)"
+        >
+            <img id="file-image" src="#" alt="Preview" class="hidden" />
+            <div id="start">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                <div>Select a file or drag here</div>
+                <div id="notimage" class="hidden">Please select an image</div>
+                <span id="file-upload-btn" class="btn btn-primary"
+                    >Select a file</span
+                >
+            </div>
+            <div id="response" class="hidden">
+                <div id="messages"></div>
+                <progress class="progress" id="file-progress" value="0">
+                    <span>0</span>%
+                </progress>
+            </div>
+        </label>
+    </form>
+</div>
+<!-- <div>
+<pre>
+    {{convertedJson}}
+</pre>
+    
+</div> -->
+<div *ngIf="dataSource.data.length === 0 && view !== 'add'" class="center">
+    <mat-spinner></mat-spinner>
+</div>
+
+<div class="toolbar-spacer"></div>
+
+<article>
+    <mat-toolbar *ngIf="dataSource.data.length !== 0 || view === 'add'">
+        <mat-toolbar-row class="toobar-position">
+            <div>
+                <!-- <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="exporter.exportTable(selectedTableExportFormat)"
+                    disabled
+                    class="button-width"
+                >
+                    Export
+                </button> -->
+
+                <button
+                    style="margin-left: 8px"
+                    mat-raised-button
+                    color="primary"
+                    (click)="onShowHideFileLoader()"
+                    class="button-width"
+                    *ngIf="view === 'add'"
+                >
+                    {{ showHideTitle }}
+                </button>
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="save()"
+                    class="button-width"
+                    *ngIf="!viewState"
+                >
+                    <mat-icon>save</mat-icon>
+                    Save
+                </button>
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="download()"
+                    class="button-width"
+                >
+                    <mat-icon>file_download</mat-icon>
+                    DownLoad
+                </button>
+                <!-- <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="closeDialog()"
+                    class="button-width"
+                >
+                    close
+                </button> -->
+            </div>
+
+            <!-- <button
+                mat-raised-button
+                color="primary"
+                (click)="getDataFromDB()"
+                class="button-width-load"
+            >
+                DB Load
+            </button> -->
+            <!-- <button
+                mat-raised-button
+                color="primary"
+                (click)="clone()"
+                class="button-width-load"
+            >
+                Clone
+            </button> -->
+
+            <!-- <button
+                mat-raised-button
+                color="primary"
+                (click)="closeDialog()"
+                class="button-width-load"
+            >
+                Close
+            </button> -->
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div class="row">
+        <div class="col-md-6">
+            <mat-form-field appearance="outline" class="field-width">
+                <mat-label>Select Revision</mat-label>
+                <mat-select
+                    [(ngModel)]="selectedBranch"
+                    name="exportType"
+                    (selectionChange)="onBranchChange()"
+                    [disabled]="view == 'view'"
+                >
+                    <mat-option
+                        *ngFor="let branch of branchList"
+                        [value]="branch"
+                        class="button-width"
+                    >
+                        {{ branch }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-6" *ngIf="!viewState || !isListFileData">
+            <mat-form-field class="field-width" appearance="outline">
+                <mat-label>Add a Comment</mat-label>
+                <textarea
+                    [(ngModel)]="comment"
+                    matInput
+                    placeholder="comment"
+                ></textarea>
+            </mat-form-field>
+
+            <!-- <mat-form-field class="field-width" appearance="outline">
+                <mat-label>Comment</mat-label>
+                <input
+                    [(ngModel)]="comment"
+                    matInput
+                    placeholder="add Comment"
+                    value=""
+                />
+            </mat-form-field> -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <mat-form-field
+                appearance="outline"
+                *ngIf="dataSource.data.length > 0"
+                class="field-max-width"
+            >
+                <mat-label>Filter</mat-label>
+                <input
+                    matInput
+                    (keyup)="applyFilter($event)"
+                    placeholder="Filter Criteria"
+                    #input
+                />
+            </mat-form-field>
+        </div>
+    </div>
+
+    <p *ngIf="dataSource.data.length > 0">
+        <b>{{ fileLabel }}: {{ this.fileName }}</b>
+    </p>
+
+    <table
+        matTableExporter
+        #exporter="matTableExporter"
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+    >
+        <ng-container [matColumnDef]="col" *ngFor="let col of displayColumns">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="mat-cell"
+                mat-sort-header
+            >
+                {{ col }}
+            </th>
+            <div *ngIf="col !== 'Action'">
+                <td mat-cell *matCellDef="let element">
+                    <mat-form-field>
+                        <input
+                            [readonly]="viewState"
+                            [type]="col"
+                            matInput
+                            [(ngModel)]="element[col]"
+                        />
+                    </mat-form-field>
+                </td>
+            </div>
+            <!-- <div *ngIf="col === 'Action'">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" [id]="action">
+                    <button
+                        mat-icon-button
+                        color="primary"
+                        (click)="editData(element)"
+                    >
+                        <mat-icon class="mat-icon-rtl-mirror">edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn">
+                        <mat-icon
+                            class="mat-icon-rtl-mirror"
+                            (click)="deleteRow(element.id)"
+                            >delete</mat-icon
+                        >
+                    </button>
+                </td>
+            </div> -->
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+        <!-- Row shown when there is no matching data. -->
+        <div *ngIf="dataSource.data.length === 0">
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No data</td>
+            </tr>
+        </div>
+    </table>
+    <div class="row" style="background-color: white">
+        <div class="col-md-6" *ngIf="dataSource.data.length > 0">
+            <button mat-button color="primary" (click)="closeDialog()">
+                <mat-icon>fast_rewind</mat-icon>
+                Back
+            </button>
+        </div>
+        <div class="col-md-6">
+            <mat-paginator
+                [hidden]="!dataSource.data.length"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                aria-label="Select page of
+            files"
+            >
+            </mat-paginator>
+        </div>
+    </div>
+    <!-- <mat-paginator
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        aria-label="Select page of users"
+    ></mat-paginator> -->
+</article>

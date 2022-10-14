@@ -1,0 +1,8 @@
+{
+  "SchemaVersion": "1.0",
+  "Name": "CurrentSpeedCount",
+  "Description": "Current Speed Count",
+  "DataType": "int",
+  "DefaultValue": 8888,
+  "Validations": []
+}

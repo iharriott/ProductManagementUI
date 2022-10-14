@@ -1,0 +1,76 @@
+<form [formGroup]="cappingRuleForm">
+<mat-card>
+ <mat-card-header>
+ <mat-card-title>
+    <h1 style="color: #004a9f">
+		Capping Rule Form
+	</h1>
+ </mat-card-title>
+
+ </mat-card-header>
+ <mat-card-content>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Schema Version</mat-label>
+                <input formControlName="schemaVersion" matInput  placeholder="SchemaVersion" value="">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <mat-form-field appearance="standard">
+            <mat-label>Entity Type</mat-label>
+            <mat-select formControlName="entityType">
+              <mat-option *ngFor="let entityType of entityTypes" [value]="entityType.value">
+                {{entityType.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Default Graduated Capping Level</mat-label>
+                <input formControlName="defaultGraduatedCappingLevel" matInput  placeholder="DefaultGraduatedCappingLevel" value="">
+            </mat-form-field>
+        </div>
+
+    </div>
+    <div class="row">
+        <mat-slide-toggle   formControlName ="isApplicable" >IsApplicable</mat-slide-toggle> 
+
+    </div>
+
+    <div class="row">
+        <mat-form-field appearance="standard">
+            <mat-label>Entity Type</mat-label>
+            <mat-select formControlName="cappingLevel">
+              <mat-option *ngFor="let cappingLevel of cappingLevels" [value]="cappingLevel.value">
+                {{cappingLevel.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+    </div>
+
+    <div class="row">
+        <button
+        mat-raised-button color="primary" 
+        (click)="onSubmit()"
+        matTooltip="Add a new validation"
+        >
+       
+        Submit
+        </button>
+      
+        
+    </div>
+ </mat-card-content>
+
+
+
+</mat-card>
+
+
+</form>

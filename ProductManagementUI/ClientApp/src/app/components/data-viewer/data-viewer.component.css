@@ -1,0 +1,106 @@
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+panel-width {
+    width: 100%;
+}
+
+.space-between {
+    margin-left: 30px;
+}
+
+table {
+    width: 100%;
+}
+
+tr.data-detail-row {
+    height: 0;
+}
+
+tr.data-element-row:not(.data-expanded-row):hover {
+    background: whitesmoke;
+}
+
+tr.data-element-row:not(.data-expanded-row):active {
+    background: #efefef;
+}
+
+.data-element-row td {
+    border-bottom-width: 0;
+}
+
+.data-element-detail {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e1e1e1;
+    box-shadow: inset 2px 3px 8px #c1c1c1;
+    border-radius: 8px;
+}
+
+.data-element-diagram {
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+}
+
+.data-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+}
+
+.data-element-description {
+    padding: 16px;
+}
+
+.data-element-description-attribution {
+    opacity: 0.5;
+}
+
+.mat-table {
+    overflow-x: scroll;
+    max-width: 99%;
+}
+
+.mat-cell,
+.mat-header-cell {
+    word-wrap: initial;
+    display: table-cell;
+    padding: 0px 10px;
+    line-break: unset;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.mat-row,
+.mat-header-row {
+    display: table-row;
+}
+
+button {
+    margin-left: 10px;
+    text-align: center;
+}
+
+.example-margin {
+    margin: 0 12px;
+}
+
+del {
+    text-decoration: none;
+    background: #fc3333;
+}
+
+ins {
+    text-decoration: none;
+    background: #2bf367;
+}

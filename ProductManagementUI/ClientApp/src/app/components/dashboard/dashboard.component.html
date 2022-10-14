@@ -1,0 +1,106 @@
+<mat-toolbar class="mat-elevation-z4 toolbar-margin" color="primary">
+    <a href="/" class="title">PACE</a>
+    <div class="toolbar-spacer"></div>
+    <a mat-button [routerLink]="['profile']">Dashboard</a>
+    <!-- <button mat-raised-button *ngIf="!isUserLoggedIn" (click)="login()">Login</button>
+   <button mat-raised-button *ngIf="isUserLoggedIn" (click)="logout()">Logout</button> -->
+</mat-toolbar>
+
+<!-- <mat-card class="example-card">
+    <mat-card-title-group>
+        <mat-card-title>Shiba Inu</mat-card-title>
+        <mat-card-subtitle>Large</mat-card-subtitle>
+        <img
+            mat-card-lg-image
+            src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+        />
+    </mat-card-title-group>
+    <mat-card-content>
+        {{ longText }}
+    </mat-card-content>
+</mat-card> -->
+
+<div class="row">
+    <div class="col-md-6">
+        <mat-card class="example-card">
+            <mat-card-title>
+                <!-- <i class="fa-solid fa-eye"></i> -->
+                <mat-icon
+                    aria-hidden="false"
+                    aria-label="Example home icon"
+                    fontIcon="visibility"
+                ></mat-icon>
+            </mat-card-title>
+            <mat-card-subtitle>View</mat-card-subtitle>
+            <mat-card-content>
+                <p>
+                    View Characteristics, factor tables, and ROC's for
+                    in-production and past rate revisions
+                </p>
+                <!-- <p>{{ longText }}</p> -->
+                <button mat-button color="primary" (click)="viewFileList()">
+                    View Rate Revisions
+                </button>
+            </mat-card-content>
+            <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+            </mat-card-actions> -->
+        </mat-card>
+    </div>
+    <div class="col-md-6">
+        <mat-card class="example-card">
+            <mat-card-title
+                ><mat-icon
+                    aria-hidden="false"
+                    aria-label="Example home icon"
+                    fontIcon="edit"
+                ></mat-icon
+            ></mat-card-title>
+            <mat-card-subtitle>Edit</mat-card-subtitle>
+            <mat-card-content>
+                <p>
+                    Edit Characteristics, factor tables, and ROC's for
+                    in-production and past rate revisions
+                </p>
+                <!-- <p>{{ longText }}</p> -->
+                <button mat-button color="primary" (click)="editFileList()">
+                    Edit Rate Revisions
+                </button>
+            </mat-card-content>
+            <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+            </mat-card-actions> -->
+        </mat-card>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <mat-card class="example-card">
+            <mat-card-title
+                ><mat-icon
+                    aria-hidden="false"
+                    aria-label="Example home icon"
+                    fontIcon="add_to_photos"
+                ></mat-icon
+            ></mat-card-title>
+            <mat-card-subtitle>Add</mat-card-subtitle>
+            <mat-card-content>
+                <p>
+                    Add new Characteristics, factor tables, and ROC's for
+                    in-production and past rate revisions
+                </p>
+                <!-- <p>{{ longText }}</p> -->
+                <button mat-button color="primary" (click)="addNewFile()">
+                    Add New File
+                </button>
+            </mat-card-content>
+            <!-- <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+            </mat-card-actions> -->
+        </mat-card>
+    </div>
+</div>

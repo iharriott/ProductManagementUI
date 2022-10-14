@@ -1,0 +1,21 @@
+<mat-tab-group mat-align-tabs="start" *ngIf="isListFileData">
+    <div *ngFor="let file of filesList">
+        <mat-tab label="{{ file.fileName }}"
+            ><app-file-upload [filesList]="file"></app-file-upload
+        ></mat-tab>
+    </div>
+
+    <!-- <mat-tab label="Second">Content 2</mat-tab>
+    <mat-tab label="Third">Content 3</mat-tab> -->
+</mat-tab-group>
+
+<mat-tab-group mat-align-tabs="start" *ngIf="!isListFileData">
+    <div *ngFor="let file of filesList">
+        <mat-tab label="{{ file.date }}"
+            ><app-file-upload [filesHistoryList]="file"></app-file-upload
+        ></mat-tab>
+    </div>
+
+    <!-- <mat-tab label="Second">Content 2</mat-tab>
+    <mat-tab label="Third">Content 3</mat-tab> -->
+</mat-tab-group>

@@ -1,0 +1,170 @@
+<div *ngIf="dataSource.data.length > 0">
+    <!-- <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Select Revision</mat-label>
+        <mat-select
+            [(ngModel)]="selectedBranch"
+            name="exportType"
+            (selectionChange)="onBranchChange()"
+        >
+            <mat-option
+                *ngFor="let branch of branchList"
+                [value]="branch"
+                class="button-width"
+            >
+                {{ branch }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field> -->
+
+    <div>
+        <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Filter</mat-label>
+            <input
+                matInput
+                (keyup)="applyFilter($event)"
+                placeholder="fiter value"
+                #input
+            />
+        </mat-form-field>
+    </div>
+
+    <button
+        mat-raised-button
+        color="primary"
+        (click)="onSelect()"
+        class="button-width button-position"
+    >
+        <mat-icon *ngIf="view !== 'edit'">visibility</mat-icon>
+        View Details
+    </button>
+
+    <p class="text-font">Viewing History for File: {{ fileName }}</p>
+
+    <!-- <button
+        mat-raised-button
+        color="primary"
+        (click)="onSelect()"
+        class="button-width button-position"
+    >
+        <mat-icon *ngIf="view === 'edit'">edit</mat-icon>
+        <mat-icon *ngIf="view !== 'edit'">visibility</mat-icon>
+        {{ buttonLabel }}
+    </button> -->
+</div>
+
+<!-- <div *ngIf="dataSource.data.length > 0"> -->
+<div class="mat-elevation-z8">
+    <!-- <div *ngIf="!branchLoadComplete">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div> -->
+
+    <table mat-table [dataSource]="dataSource" matSort>
+        <!-- commitId Column -->
+        <ng-container matColumnDef="date">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Date
+            </th>
+            <td mat-cell *matCellDef="let row" class="row-width-dt">
+                {{ row.date }}
+            </td>
+        </ng-container>
+
+        <!-- fileName Name Column -->
+        <ng-container matColumnDef="comment">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Comment
+            </th>
+            <td mat-cell *matCellDef="let row" class="row-width">
+                {{ row.comment }}
+            </td>
+        </ng-container>
+
+        <!-- state Column -->
+        <ng-container matColumnDef="authorName">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Author Name
+            </th>
+            <td mat-cell *matCellDef="let row" class="row-width-dt">
+                {{ row.authorName }}
+            </td>
+        </ng-container>
+
+        <!-- path Column -->
+        <ng-container matColumnDef="fileId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>File Id</th>
+            <td mat-cell *matCellDef="let row">{{ row.fileId }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th
+                mat-header-cell
+                class="th-center table-column-header"
+                *matHeaderCellDef
+                style="justify-content: left"
+            >
+                Action
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <!-- <a mat-button (click)="loadData(row)">Load Details</a> -->
+
+                <mat-checkbox class="table-column-header" (click)="onClick(row)"
+                    >View Details
+                </mat-checkbox>
+
+                <!-- <button mat-button color="primary" (click)="viewHistory(row)">
+                    View History
+                </button>-->
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <div *ngIf="dataSource.data.length === 0" class="center">
+        <mat-spinner class="wrapper" style="margin: 0 auto"></mat-spinner>
+    </div>
+
+    <!-- <table>
+        <tr *ngIf="!dataSource.data?.length">
+            <td
+                style="text-align: center"
+                [attr.colspan]="displayedColumns?.length"
+            >
+                No Records Found!
+            </td>
+        </tr>
+    </table> -->
+    <div class="row" style="background-color: none; min-width: 900px">
+        <div class="col-md-6" *ngIf="dataSource.data.length > 0">
+            <!-- <button mat-button color="primary" (click)="goToDashboard()">
+                <mat-icon>fast_rewind</mat-icon>
+                Back
+            </button> -->
+        </div>
+        <div class="col-md-6">
+            <mat-paginator
+                [hidden]="!dataSource.data.length"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                aria-label="Select page of
+                files"
+            >
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+<!-- </div> -->

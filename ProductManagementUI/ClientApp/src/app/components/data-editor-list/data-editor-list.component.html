@@ -1,0 +1,112 @@
+<p>
+    <mat-toolbar color="primary">
+        <button
+            mat-icon-button
+            class="example-icon"
+            aria-label="Example icon-button with menu icon"
+        >
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span>Data Editor</span>
+        <span class="example-spacer"></span>
+        <button
+            mat-raised-button
+            class="example-spacer"
+            color="warn"
+            (click)="openDialog()"
+        >
+            Open Editor
+        </button>
+    </mat-toolbar>
+</p>
+
+<table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef>State</th>
+        <td mat-cell *matCellDef="let element">{{ element.state }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="version" class="space-between">
+        <th mat-header-cell *matHeaderCellDef>Version</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.version }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef>CreatedBy</th>
+        <td mat-cell *matCellDef="let element">{{ element.createdBy }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdDate">
+        <th mat-header-cell *matHeaderCellDef>CreatedDate</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.createdDate }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="approvedBy">
+        <th mat-header-cell *matHeaderCellDef>ApprovedBy</th>
+        <td mat-cell *matCellDef="let element">{{ element.approvedBy }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="approvedDate">
+        <th mat-header-cell *matHeaderCellDef>ApprovedDate</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.approvedDate }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+            <button
+                mat-icon-button
+                color="primary"
+                (click)="editData(element.id)"
+            >
+                <mat-icon class="mat-icon-rtl-mirror">edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn">
+                <mat-icon
+                    class="mat-icon-rtl-mirror"
+                    (click)="deleteRow(element.id)"
+                    >delete</mat-icon
+                >
+            </button>
+        </td>
+    </ng-container>
+
+    <!-- <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+            <a
+                mat-button
+                href="javascript:void()"
+                (click)="element.isExpanded = !element.isExpanded"
+                >View Detail</a
+            >
+            <mat-checkbox class="example-margin">Compare</mat-checkbox>
+        </td>
+    </ng-container> -->
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+        mat-row
+        *matRowDef="let element; columns: displayedColumns"
+        class="data-element-row"
+        [class.data-expanded-row]="element.isExpanded"
+    ></tr>
+    <!-- <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']"
+        class="data-detail-row"
+    ></tr> -->
+</table>

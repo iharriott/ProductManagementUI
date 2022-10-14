@@ -1,0 +1,34 @@
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+a.title {
+    color: white;
+    text-decoration: none;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.example-card {
+    margin-top: 10px;
+    max-width: 400px;
+}
+
+.toolbar-width {
+    width: 100%;
+}
+
+.toolbar-margin {
+    margin-top: calc(5vh - 2px);
+    margin-bottom: 15px;
+}

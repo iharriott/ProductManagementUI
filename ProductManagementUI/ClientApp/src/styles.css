@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.example-full-width {
+    width: 30%;
+}
+
+.green-snackbar {
+    background: rgb(50, 112, 73);
+    color: white;
+}
+
+    .green-snackbar button {
+        background-color: rgb(29, 71, 44);
+        color: white;
+        border: none;
+    }
+
+.red-snackbar {
+    background: #f44336;
+    color: white;
+}
+
+    .red-snackbar button {
+        background-color: #f44336;
+        color: white !important;
+        border: none;
+    }
+
+.table-column-header {
+    font-weight: bold;
+    font-size: medium;
+    color: rgb(43, 43, 204);
+}
+
+.mat-row:nth-child(even) {
+    background-color: lightgrey;
+}
+
+.mat-row:nth-child(odd) {
+    background-color: white;
+}
+
+.row-width {
+    min-width: 300px;
+}
+
+.row-width-dt {
+    min-width: 200px;
+}
+
+.text-font {
+    font-weight: bold;
+    font-size: medium;
+    color: blue;
+}
