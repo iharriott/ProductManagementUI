@@ -1,8 +1,8 @@
 {
   "EnterpriseSystemAcronym": "apolrs",
   "ApplicationAcronym": "apstks",
-  "ImageAcronym": "prddefnui",
-  "ImageName": "productdefnui",
+  "ImageAcronym": "pdmuix",
+  "ImageName": "productmuix",
   "Authors": "Ian Harriott",
   "URL": "https://geico@dev.azure.com/geico/Apollo/_git/ProductManagementUI",
   "Description": "Application used to create Product Management UI",
