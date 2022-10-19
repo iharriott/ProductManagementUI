@@ -231,10 +231,10 @@ _Pvt_Extensions
 .fake/
 
 
-/.vs/DreamTool/v17/.suo
-/.vs/DreamTool/config/applicationhost.config
-/.vs/DreamTool/DesignTimeBuild/.dtbcache.v2
-/.vs/DreamTool/v17/.futdcache.v1
-/.vs/DreamTool/project-colors.json
+/.vs/ProductManagement/v17/.suo
+/.vs/ProductManagement/FileContentIndex
+/.vs/ProductManagementUI/DesignTimeBuild/.dtbcache.v2
+/.vs/ProductManagementUI/v17/.futdcache.v1
+/.vs/ProductManagementUI/project-colors.json
 /.vs/VSWorkspaceState.json
 /.vs/slnx.sqlite
