@@ -29,9 +29,14 @@ const isIE =
         MsalModule.forRoot(
             new PublicClientApplication({
                 auth: {
-                    clientId: environment.azureadClientid,
+                    // clientId: environment.azureadClientid,
+                    clientId: 'eaffd59c-cc2d-4570-892a-7630be7c0a62',
+                    //clientId: '2d5dcb58-1625-4e09-9022-bfb6deccc403',
                     redirectUri: 'http://localhost:4200',
-                    authority: `https://login.microsoftonline.com/${environment.azureadTenantid}`
+                    //redirectUri: 'https://google.com',
+                    // authority: `https://login.microsoftonline.com/${environment.azureadTenantid}`
+                    authority: `https://login.microsoftonline.com/7389d8c0-3607-465c-a69f-7d4426502912`
+                    //authority: `https://login.microsoftonline.com/common`
                 },
                 cache: {
                     cacheLocation: 'localStorage',
@@ -61,6 +66,7 @@ const isIE =
         {
             provide: HTTP_INTERCEPTORS,
             useClass: MsalInterceptor,
+            // useClass: TokenInterceptorService,
             multi: true
         },
         MsalGuard

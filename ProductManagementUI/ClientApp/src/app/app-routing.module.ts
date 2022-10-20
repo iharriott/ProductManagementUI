@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { MsalGuard } from '@azure/msal-angular';
 import { ProductDefinitionComponent } from '../app/components/product-definition/product-definition.component';
 import { CappingRuleComponent } from './components/capping-rule/capping-rule.component';
 import { CharacteristicsComponent } from './components/characteristics/characteristics.component';
@@ -26,6 +27,7 @@ const routes: Routes = [
         path: 'editfile/:fileHistoryId/:fileName/:fileId',
         component: FileUploadComponent,
         data: { view: 'edit' }
+        // canActivate: [MsalGuard]
     },
     {
         path: 'addNewfile',
@@ -110,7 +112,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [
+        RouterModule.forRoot(routes, { initialNavigation: 'enabledBlocking' })
+    ],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}
