@@ -1,0 +1,30 @@
+variables:
+  projectName: 'ProductManagementUI'
+  solutions: 'ProductManagement.sln'
+  #unitTestProject: 'src\UnitTests\$(projectName).UnitTests\$(projectName).UnitTests.csproj'
+  emailAddress: 'IHarriott@geico.com'
+  
+  projectFileName: '$(projectName)/$(projectName).csproj'
+  appFolder: "$(projectName)"
+  workingDirectory: '$(appFolder)/ClientApp'
+  distDirectory: '$(workingDirectory)/dist'
+  selectOrConfig: 'config'
+  nugetConfigPath: '$(projectName)/nuget.config'
+  buildArguments: '--configuration $(BuildConfiguration)'
+  
+  BuildConfiguration: 'Release'
+  publishWebProjects: false
+  zipAfterPublish: false
+  modifyOutputPath: false
+  sourceFolder: '$(projectName)'
+  Contents: |
+        aksdeploy.config.json
+        Dockerfile
+  artifactName: publish
+  buildalias: $(Build.DefinitionName)
+  dockerfilepath: '$(Pipeline.Workspace)/publish/Dockerfile'
+  publishArguments: '$(buildArguments) --output $(Build.ArtifactStagingDirectory)/publish'
+  SkipImageStage: false
+  newCertificateThumbprint: '02f68823e193d4ca30c8c94f074ecfd98672bfac'
+  isPullRequest: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest')
+  buildName: $(Build.DefinitionName).$(SourceBranchName).$(Date:yyyyMMdd)$(Rev:.r)  #https://geicoit.atlassian.net/wiki/spaces/GCKM/pages/2191557757/Guidelines+on+Build+Definition+Naming

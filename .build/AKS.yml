@@ -1,0 +1,72 @@
+variables:
+  - template: variables.yml
+
+name: ${{ variables.buildName }}
+
+jobs:
+- job: CIJobProductManagement
+  displayName: 'Job: Install, Build, Test and Publish'
+  pool:
+    name: GEICO Agents
+    demands:
+    - dotnet6 -equals true
+    - npm
+  steps:
+  - checkout: self
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet restore
+    inputs:
+      command: restore
+      projects: '${{variables.solutions}}'
+      selectOrConfig: '${{variables.selectOrConfig}}'
+      nugetConfigPath: '${{variables.nugetConfigPath}}'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      projects: '${{variables.projectFileName}}'
+      arguments: '${{variables.buildArguments}} /p:OutputPath=$(build.binariesdirectory)\'
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet publish
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: '**/ProductManagementUI/ProductManagementUI.csproj'
+      arguments: --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
+      zipAfterPublish: false
+      modifyOutputPath: false
+
+  - task: Npm@1
+    displayName: npm Install
+    inputs:
+      workingDir: '${{variables.workingDirectory}}'
+      command: install
+
+  - task: Npm@1
+    displayName: npm run build
+    inputs:
+      workingDir: '${{variables.workingDirectory}}'
+      command: custom
+      customCommand: run build
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+    inputs:
+      SourceFolder: ProductManagementUI/ClientApp/dist
+      Contents: '*'
+      TargetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+    inputs:
+      SourceFolder: ProductManagementUI
+      Contents: '${{variables.Contents}}'
+      TargetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(Build.BuildNumber)'
+    inputs:
+      ArtifactName: $(Build.BuildNumber)
+      TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'

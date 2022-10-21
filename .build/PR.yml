@@ -1,0 +1,64 @@
+variables:
+  - template: variables.yml
+
+name: ${{ variables.buildName }}
+
+trigger: none
+
+resources:
+  repositories:
+    - repository: DevOps
+      name: GTR-CORE/DevOps
+      type: git
+
+stages:
+- template: CI_CD/Templates/CI/IronGate.yml@DevOps
+
+- stage: StageBuildTest
+  jobs:
+  - job: PRJobProductManagement
+    displayName: 'Job: Install, Build and Test'
+    pool:
+      name: GEICO Agents
+      demands:
+      - npm
+    steps:
+      - checkout: self
+
+      - task: DotNetCoreCLI@2
+        displayName: dotnet restore
+        inputs:
+          command: restore
+          projects: '${{variables.solutions}}'
+          selectOrConfig: '${{variables.selectOrConfig}}'
+          nugetConfigPath: '${{variables.nugetConfigPath}}'
+
+      - task: DotNetCoreCLI@2
+        displayName: dotnet build
+        inputs:
+          projects: '${{variables.projectFileName}}'
+          arguments: '${{variables.buildArguments}} /p:OutputPath=$(build.binariesdirectory)\'
+
+      - task: Npm@1
+        displayName: npm Install
+        inputs:
+          workingDir: '${{variables.workingDirectory}}'
+          command: install
+
+      - task: Npm@1
+        displayName: npm run build
+        inputs:
+          workingDir: '${{variables.workingDirectory}}'
+          command: custom
+          customCommand: run build
+
+      - task: Npm@1
+        displayName: npm run test
+        inputs:
+          workingDir: '${{variables.workingDirectory}}'
+          command: custom
+          verbose: true
+          customCommand: test
+        enabled: false
+
+
