@@ -1,8 +1,13 @@
+using Geico.Cloud.AspNetCore.Hosting.Extensions;
+using Geico.Cloud.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.WebHost.UseGeicoKestrelDefaults();
+builder.Host.UseGeicoAppConfiguration();
 
 var app = builder.Build();
 
