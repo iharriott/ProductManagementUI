@@ -24,6 +24,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       }
+    },
+     "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://+:8443;http://+:30000",
+        "no_proxy": ".geico-net, .internal",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "NO_PROXY": ".geico-net, .internal"
+      },
+      "publishAllPorts": true,
+      "httpPort": 38815,
+      "useSSL": true,
+      "sslPort": 38816
     }
   }
 }
