@@ -87,6 +87,9 @@
         }
     },
     "cli": {
-        "schematicCollections": ["@angular-eslint/schematics"]
+        "schematicCollections": [
+          "@angular-eslint/schematics"
+        ],
+        "analytics": "f39c03b0-db47-4e12-ae4c-cd24e4ebe5b4"
     }
 }
