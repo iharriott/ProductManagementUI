@@ -11,14 +11,26 @@
         <mat-toolbar class="mat-elevation-z4" color="primary">
             <a href="/" class="title">Product Management UI</a>
             <div class="toolbar-spacer"></div>
-            <a mat-button [routerLink]="['profile']">Menu</a>
-            <button mat-raised-button *ngIf="!isUserLoggedIn" (click)="login()">
+            <!-- <a mat-button [routerLink]="['profile']">Menu</a> -->
+            <!-- <button mat-raised-button *ngIf="!isUserLoggedIn" (click)="login()">
+                Login Direct
+            </button> -->
+            <button
+                mat-raised-button
+                *ngIf="!isUserLoggedIn"
+                (click)="loginPopup()"
+            >
                 Login
             </button>
             <button mat-raised-button *ngIf="isUserLoggedIn" (click)="logout()">
                 Logout
             </button>
+            <button mat-icon-button>
+                <mat-icon class="login-icon">person</mat-icon>
+            </button>
+            <p style="font-size: small">{{ getLoggedInUser() }}</p>
         </mat-toolbar>
+        <app-side-navigation *ngIf="getAccount()"></app-side-navigation>
         <!-- <router-outlet></router-outlet> -->
     </body>
 </html>

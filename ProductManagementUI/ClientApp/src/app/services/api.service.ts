@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { GitResult } from '../components/interfaces/git-result';
-import { Branch } from '../components/interfaces/branch';
-import { FileHistory } from '../components/interfaces/file-history';
+import { FactorFileContent } from '../components/interfaces/factor-file';
+import { RateRevisions } from '../components/interfaces/rate-revisions';
+import { DataService } from './data.service';
+import { RatingChanges } from '../components/interfaces/rating-changes';
 
 @Injectable({
     providedIn: 'root'
@@ -12,117 +13,85 @@ import { FileHistory } from '../components/interfaces/file-history';
 export class ApiService {
     endpoint;
     baseUrl = environment.gitApiBaseUrl;
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private dataService: DataService) {}
 
-    getRatingTables(branch: string): Observable<GitResult> {
+    getRatingTables(
+        fileVersion: string,
+        includeContent: boolean
+    ): Observable<any> {
         const apiAction = 'GetRatingTables';
-        const version = branch ? branch : this.encodeUri('master');
-        const includeContent = true;
+        const version = fileVersion ? fileVersion : this.encodeUri('CW');
         this.endpoint = `${this.baseUrl}/${apiAction}/${version}?includeContent=${includeContent}`;
-        return this.http.get<GitResult>(this.endpoint);
+        return this.http.get<any>(this.endpoint);
+    }
+
+    getRatingTablesFilter(
+        fileVersion: string,
+        includeContent: boolean,
+        fileName?: string
+    ): Observable<any> {
+        const apiAction = 'GetRatingTables';
+        const version = fileVersion ? fileVersion : this.encodeUri('CW');
+        this.endpoint = `${this.baseUrl}/${apiAction}/${version}?includeContent=${includeContent}?ratingFactorFilter=${fileName}`;
+        return this.http.get<any>(this.endpoint);
     }
 
     getRateFileHistory(
-        branch: string,
-        fileId: string
-    ): Observable<FileHistory> {
+        fileName: string,
+        includeContent: boolean
+    ): Observable<RatingChanges> {
         const apiAction = 'GetRatingChanges';
-        const version = branch ? branch : this.encodeUri('master');
-        fileId = this.encodeUri(fileId);
-        const includeContent = true;
-        this.endpoint = `${this.baseUrl}/${apiAction}/${version}/${fileId}?includeContent=${includeContent}`;
-        return this.http.get<FileHistory>(this.endpoint);
+        this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}?includeContent=${includeContent}`;
+        return this.http.get<RatingChanges>(this.endpoint);
     }
 
     updateRatingFile(
-        path: string,
+        fileName: string,
         data: string,
-        branch: string,
+        versionId: string,
         comment: string
     ): Observable<any> {
-        //debugger;
         console.log(data);
         const apiAction = 'UpdateRatingFile';
-        const branchName = this.encodeUri(branch);
-        const filePath = this.encodeUri(path);
-        this.endpoint = `${this.baseUrl}/${apiAction}/${branchName}/${filePath}`;
+        this.endpoint = `${this.baseUrl}/${apiAction}/${versionId}/${fileName}`;
         return this.http.put(this.endpoint, {
             csvFileContent: data,
-            comments: comment
+            comments: comment,
+            author: this.dataService.getLoggedInUser()
         });
     }
 
     addNewRatingFile(
-        path: string,
+        fileName: string,
         data: string,
-        branch: string,
         comment: string
     ): Observable<any> {
-        //debugger;
         console.log(data);
         const apiAction = 'AddNewRatingFile';
-        const branchName = this.encodeUri(branch);
-        const filePath = this.encodeUri(path);
-        this.endpoint = `${this.baseUrl}/${apiAction}/${branchName}/${filePath}`;
+        this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}`;
         return this.http.put(this.endpoint, {
             csvFileContent: data,
-            comments: comment
+            comments: comment,
+            author: this.dataService.loggedInUser
         });
     }
 
-    getAllBranches(): Observable<Branch> {
-        const apiAction = 'GetRateRevisions';
+    getRateRevisions(): Observable<RateRevisions> {
+        const apiAction = 'GetProductDefinitions';
         this.endpoint = `${this.baseUrl}/${apiAction}`;
-        return this.http.get<Branch>(this.endpoint);
+        return this.http.get<RateRevisions>(this.endpoint);
     }
 
     encodeUri(inputStr: string): string {
         return encodeURIComponent(inputStr);
     }
 
-    getRatingFileContent(
-        branch: string,
-        inputfileId: string,
-        fileHistoryId: string
-    ): Observable<any> {
-        const apiAction = 'GetRatingFileContent';
-        const version = branch ? branch : 'master';
-        const fileId = this.encodeUri(inputfileId);
-        this.endpoint = `${this.baseUrl}/${apiAction}/${version}/${fileId}/?fileHistoryId=${fileHistoryId}`;
-        return this.http.get<any>(this.endpoint);
-    }
-
-    // handleError(error: Response) {
-    //     if (error.status == 500) {
-    //       this.router.navigate(['/login']);
-    //     } else {
-    //       return throwError(error);
-    //     }
-    // }
-
-    getAllData(url: string): Observable<any[]> {
-        this.endpoint = `${environment.api}/${url}/`;
-        return this.http.get<any[]>(this.endpoint);
-    }
-
-    getDataById(url: string, id: number): Observable<any[]> {
-        this.endpoint = `${environment.api}/${url}/${id}`;
-        console.log(`this endpoint ${this.endpoint}`);
-        return this.http.get<any[]>(this.endpoint);
-    }
-
-    createData(url: string, data: any) {
-        this.endpoint = `${environment.api}/${url}/`;
-        return this.http.post<any>(this.endpoint, data);
-    }
-
-    updateRow(url: string, data: any, id: number) {
-        this.endpoint = `${environment.api}/${url}/`;
-        return this.http.put<any>(this.endpoint + id, data);
-    }
-
-    deleteRow(url: string, id: number) {
-        this.endpoint = `${environment.api}/${url}/`;
-        return this.http.delete<any>(this.endpoint + id);
+    getFileContent(
+        fileName: string,
+        fileVersionId: string
+    ): Observable<FactorFileContent> {
+        const apiAction = 'GetFileContent';
+        this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}/${fileVersionId}`;
+        return this.http.get<FactorFileContent>(this.endpoint);
     }
 }

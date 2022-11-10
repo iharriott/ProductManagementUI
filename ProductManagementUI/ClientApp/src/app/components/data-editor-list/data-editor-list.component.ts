@@ -45,28 +45,28 @@ export class DataEditorListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.dataService.fileMode = false;
-        const url = CommonConstants.cappingLevel;
-        this.dataSource = new MatTableDataSource();
-        this.apiService.getAllData(url).subscribe((data) => {
-            this.dataService.determineVersion(data);
-            console.log(`derived version ${this.dataService.dataVersion}`);
-            this.dataSource.data = data.map((val) => {
-                console.log(`derived version ${JSON.stringify(val)}`);
-                return {
-                    id: val.id,
-                    name: val.name,
-                    version: val.version,
-                    createdBy: val.createdBy,
-                    createdDate: val.createdDate,
-                    approvedBy: val.approvedBy,
-                    approvedDate: val.approvedDate,
-                    data: val.data,
-                    state: val.state,
-                    isExpanded: false
-                };
-            });
-        });
+        // this.dataService.fileMode = false;
+        // const url = CommonConstants.cappingLevel;
+        // this.dataSource = new MatTableDataSource();
+        // this.apiService.getAllData(url).subscribe((data) => {
+        //     this.dataService.determineVersion(data);
+        //     console.log(`derived version ${this.dataService.dataVersion}`);
+        //     this.dataSource.data = data.map((val) => {
+        //         console.log(`derived version ${JSON.stringify(val)}`);
+        //         return {
+        //             id: val.id,
+        //             name: val.name,
+        //             version: val.version,
+        //             createdBy: val.createdBy,
+        //             createdDate: val.createdDate,
+        //             approvedBy: val.approvedBy,
+        //             approvedDate: val.approvedDate,
+        //             data: val.data,
+        //             state: val.state,
+        //             isExpanded: false
+        //         };
+        //     });
+        // });
     }
 
     openDialog(): any {
@@ -79,28 +79,30 @@ export class DataEditorListComponent implements OnInit {
         });
     }
 
-    editData(id: any) {
-        const url = CommonConstants.cappingLevel;
-        this.apiService.getDataById(url, id).subscribe((val) => {
-            this.dialogData = { ...val };
-            let dialogRef = this.openDialog();
-            dialogRef.afterClosed().subscribe(() => {
-                this.ngOnInit();
-            });
-        });
-    }
+    editData(id: any) {}
+
+    // editData(id: any) {
+    //     const url = CommonConstants.cappingLevel;
+    //     this.apiService.getDataById(url, id).subscribe((val) => {
+    //         this.dialogData = { ...val };
+    //         let dialogRef = this.openDialog();
+    //         dialogRef.afterClosed().subscribe(() => {
+    //             this.ngOnInit();
+    //         });
+    //     });
+    // }
 
     deleteRow(id: number) {
-        debugger;
-        const url = CommonConstants.cappingLevel;
-        this.apiService.deleteRow(url, id).subscribe({
-            next: (res) => {
-                this.messageService.openSnackBar(`Data created Successfully `);
-                this.ngOnInit();
-            },
-            error: (err) => {
-                this.messageService.openSnackBar(`Error Deleting data `);
-            }
-        });
+        // debugger;
+        // const url = CommonConstants.cappingLevel;
+        // this.apiService.deleteRow(url, id).subscribe({
+        //     next: (res) => {
+        //         this.messageService.openSnackBar(`Data created Successfully `);
+        //         this.ngOnInit();
+        //     },
+        //     error: (err) => {
+        //         this.messageService.openSnackBar(`Error Deleting data `);
+        //     }
+        // });
     }
 }

@@ -5,3 +5,10 @@ a.title {
     color: white;
     text-decoration: none;
 }
+
+.login-icon {
+    background: #a4c4fc;
+    color: #4374e3;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}

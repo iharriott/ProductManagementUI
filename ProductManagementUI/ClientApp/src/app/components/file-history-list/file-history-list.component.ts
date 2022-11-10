@@ -1,24 +1,41 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import {
-    MatDialogRef,
-    MatDialog,
-    MAT_DIALOG_DATA
-} from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
 import { FileSelectionPopupComponent } from '../file-selection-popup/file-selection-popup.component';
-import { FileHistory } from '../interfaces/file-history';
-import { FileHistorySummary } from '../interfaces/file-history-summary';
-import { GitResult } from '../interfaces/git-result';
+
+import {
+    FileChangeHistory,
+    ProductDefinitionVersion,
+    RatingChanges
+} from '../interfaces/rating-changes';
+import * as R from 'ramda';
+import {
+    trigger,
+    state,
+    style,
+    transition,
+    animate
+} from '@angular/animations';
 
 @Component({
     selector: 'app-file-history-list',
     templateUrl: './file-history-list.component.html',
-    styleUrls: ['./file-history-list.component.css']
+    styleUrls: ['./file-history-list.component.css'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition(
+                'expanded <=> collapsed',
+                animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+            )
+        ])
+    ]
 })
 export class FileHistoryListComponent implements OnInit {
     dataSource!: MatTableDataSource<any>;
@@ -34,68 +51,60 @@ export class FileHistoryListComponent implements OnInit {
     version!: string;
     fileName!: string;
     dateList: any[] = [];
+    isTableExpanded = false;
+    expandedElement!: ProductDefinitionVersion | null;
 
     constructor(
         private apiService: ApiService,
         public dataService: DataService,
         private router: Router,
-        private route: ActivatedRoute,
         public dialogRef: MatDialogRef<FileSelectionPopupComponent>,
-        private dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public dialogData: string
     ) {
         this.dataSource = new MatTableDataSource();
     }
 
     ngOnInit(): void {
-        //debugger;
         this.fileName = this.dataService.currentFile;
-        this.fileId = this.route.snapshot.params['fileId'];
-        this.selectedBranch = this.route.snapshot.params['version'];
         this.onGetFiles();
     }
 
     onGetFiles(): void {
-        this.apiService
-            .getRateFileHistory(this.selectedBranch, this.fileId)
-            .subscribe(
-                (data: FileHistory) => {
-                    this.dataService.currentFileHistoryData = data;
-                    this.version = data.version;
-                    this.fileId = data.result.fileId;
-                    this.fileSummaryData = data.result.history.map(
-                        (fileData) => {
-                            return {
-                                version: this.version,
-                                filedId: this.fileId,
-                                fileHistoryId: fileData.fileHistoryId,
-                                date: this.dataService.getDateFromUTC(
-                                    fileData.date
-                                ),
-                                comment: fileData.comment.substring(0, 35),
-                                authorName: fileData.authorName
-                            };
-                        }
-                    );
+        this.apiService.getRateFileHistory(this.fileName, true).subscribe(
+            (data: RatingChanges) => {
+                let history: FileChangeHistory[] = R.pathOr(
+                    '',
+                    ['result', 'history'],
+                    data
+                );
+                console.log(`history ${JSON.stringify(history)}`);
+                this.dataService.currentFileHistoryData = data;
+                this.version = data.version;
 
-                    this.dataSource.data = [...this.fileSummaryData];
-                    this.columnHeadings = this.dataService.getColumnHeadings(
-                        this.fileSummaryData
-                    );
-                    //this.displayedColumns = [...this.columnHeadings, 'action'];
-                    this.displayedColumns = [
-                        'date',
-                        'comment',
-                        'authorName',
-                        'action'
-                    ];
-                    //this.dataLoaded = true;
-                    console.log(`column headings ${this.displayedColumns}`);
-                    console.log(`${JSON.stringify(this.fileSummaryData)}`);
-                },
-                (error: any) => console.log(error),
-                () => console.log('Done retrieving users')
-            );
+                this.fileSummaryData = history.map((fileData) => {
+                    console.log(`file data ${JSON.stringify(fileData)}`);
+                    return {
+                        fileVersionId: fileData.fileVersionId,
+                        isLatestVersion: fileData.isLatestVersion,
+                        fileContent: fileData.fileContent,
+                        data: fileData.productDefinitionVersions,
+                        isExpanded: false
+                    };
+                });
+
+                this.dataSource.data = [...this.fileSummaryData];
+                this.columnHeadings = this.dataService.getColumnHeadings(
+                    this.fileSummaryData
+                );
+                this.displayedColumns = [
+                    'fileVersionId',
+                    'isLatestVersion',
+                    'action'
+                ];
+            },
+            (error: any) => console.log(error),
+            () => console.log('Done retrieving file history')
+        );
     }
 
     applyFilter(event: Event) {
@@ -113,15 +122,30 @@ export class FileHistoryListComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
+    toggleTableRows() {
+        this.isTableExpanded = !this.isTableExpanded;
+
+        this.dataSource.data.forEach((row: any) => {
+            row.isExpanded = this.isTableExpanded;
+        });
+    }
+
     onClick(row) {
-        //debugger;
-        const { date } = row;
-        this.dateList = [...this.dateList, date];
+        const { fileVersionId } = row;
+        this.router.navigate(['viewfilehistory', fileVersionId, this.fileName]);
     }
 
     onSelect() {
         this.dataService.isListFileData = false;
         this.dataService.dateList = this.dateList;
         this.router.navigate(['multiview']);
+    }
+
+    goBack() {
+        if (this.dataService.mode === 'view')
+            this.router.navigate(['multirevision']);
+        else {
+            this.router.navigate(['editfilelist']);
+        }
     }
 }

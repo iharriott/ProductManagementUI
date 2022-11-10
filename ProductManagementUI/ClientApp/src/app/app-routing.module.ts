@@ -15,9 +15,68 @@ import { HomeComponent } from './components/home/home.component';
 import { MultiEditComponent } from './components/multi-edit/multi-edit.component';
 import { MultiRevisionViewComponent } from './components/multi-revision-view/multi-revision-view.component';
 import { RateRevisionComponent } from './components/rate-revision/rate-revision.component';
+import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
+//import { MsalGuard } from '@azure/msal-angular';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    {
+        path: '',
+        component: HomeComponent,
+        // redirectTo: 'home',
+        // pathMatch: 'full',
+        children: [
+            {
+                path: 'dashboard',
+                component: DashboardComponent,
+                data: { view: 'dashboard' }
+            },
+            {
+                path: 'revision',
+                component: RateRevisionComponent,
+                data: { view: 'revision' }
+            },
+            {
+                path: 'viewfilelist',
+                component: FileListComponent,
+                data: { view: 'view' }
+            },
+            {
+                path: 'editfilelist',
+                component: FileListComponent,
+                data: { view: 'edit' }
+            },
+            {
+                path: 'addNewfile',
+                component: FileUploadComponent,
+                data: { view: 'add' }
+            },
+            {
+                path: 'multiedit',
+                component: MultiEditComponent,
+                data: { view: 'edit' }
+            },
+            {
+                path: 'multiview',
+                component: MultiEditComponent,
+                data: { view: 'view' }
+            },
+            {
+                path: 'multirevision',
+                component: MultiRevisionViewComponent,
+                data: { view: 'multirevision' }
+            },
+            {
+                path: 'filehistory/:fileName',
+                component: FileHistoryListComponent,
+                data: { view: 'filehistory' }
+            },
+            {
+                path: 'viewfilehistory/:fileHistoryId/:fileName',
+                component: FileUploadComponent,
+                data: { view: 'viewhistory' }
+            }
+        ]
+    },
     {
         path: 'product',
         component: ProductDefinitionComponent,
@@ -34,11 +93,11 @@ const routes: Routes = [
         component: FileUploadComponent,
         data: { view: 'add' }
     },
-    {
-        path: 'viewfile/:fileHistoryId/:fileName/:fileId',
-        component: FileUploadComponent,
-        data: { view: 'view' }
-    },
+    // {
+    //     path: 'viewfile/:fileHistoryId/:fileName',
+    //     component: FileUploadComponent,
+    //     data: { view: 'view' }
+    // },
     {
         path: 'capping',
         component: CappingRuleComponent,
@@ -64,49 +123,64 @@ const routes: Routes = [
         component: DataEditorListComponent,
         data: { view: 'datalist' }
     },
+    // {
+    //     path: 'viewfilelist',
+    //     component: FileListComponent,
+    //     data: { view: 'view' }
+    // },
+    // {
+    //     path: 'editfilelist',
+    //     component: FileListComponent,
+    //     data: { view: 'edit' }
+    // },
+    // {
+    //     path: 'dashboard',
+    //     component: DashboardComponent,
+    //     data: { view: 'dashboard' }
+    // },
+    // {
+    //     path: 'home',
+    //     component: HomeComponent,
+    //     data: { view: 'home' }
+    // },
+    // {
+    //     path: 'multiedit',
+    //     component: MultiEditComponent,
+    //     data: { view: 'edit' }
+    // },
+    // {
+    //     path: 'multiview',
+    //     component: MultiEditComponent,
+    //     data: { view: 'view' }
+    // },
+    // {
+    //     path: 'filehistory/:filePath',
+    //     component: FileHistoryListComponent,
+    //     data: { view: 'filehistory' }
+    // },
+    // {
+    //     path: 'revision',
+    //     component: RateRevisionComponent,
+    //     data: { view: 'revision' }
+    // },
+    // {
+    //     path: 'multirevision',
+    //     component: MultiRevisionViewComponent,
+    //     data: { view: 'multirevision' }
+    // },
     {
-        path: 'viewfilelist',
-        component: FileListComponent,
-        data: { view: 'view' }
-    },
-    {
-        path: 'editfilelist',
-        component: FileListComponent,
-        data: { view: 'edit' }
-    },
-    {
-        path: 'dashboard',
-        component: DashboardComponent,
-        data: { view: 'dashboard' }
-    },
-    {
-        path: 'home',
-        component: HomeComponent,
-        data: { view: 'home' }
-    },
-    {
-        path: 'multiedit',
-        component: MultiEditComponent,
-        data: { view: 'edit' }
-    },
-    {
-        path: 'multiview',
-        component: MultiEditComponent,
-        data: { view: 'view' }
-    },
-    {
-        path: 'filehistory/:version/:fileId',
-        component: FileHistoryListComponent,
-        data: { view: 'filehistory' }
-    },
-    {
-        path: 'revision',
-        component: RateRevisionComponent,
-        data: { view: 'revision' }
-    },
-    {
-        path: 'multirevision',
-        component: MultiRevisionViewComponent,
+        path: 'sideNav',
+        component: SideNavigationComponent,
+        // children: [
+        //     {
+        //         path: 'dashboard',
+        //         component: DashboardComponent
+        //     },
+        //     {
+        //         path: 'revision',
+        //         component: RateRevisionComponent
+        //     }
+        // ],
         data: { view: 'multirevision' }
     }
 ];

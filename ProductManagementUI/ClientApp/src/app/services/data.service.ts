@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { CommonConstants } from '../constants/common-constants';
 import * as XLSX from 'xlsx';
-import { GitResult } from '../components/interfaces/git-result';
-import { FileHistory } from '../components/interfaces/file-history';
+import { FactorFile } from '../components/interfaces/factor-file';
 
 @Injectable({
     providedIn: 'root'
@@ -14,26 +12,32 @@ export class DataService {
     isVersionExists!: boolean;
     dataVersion!: string;
     fileMode = false;
-    currentFileData!: GitResult;
+    currentFileData!: FactorFile;
     filesData!: any[];
-    selectedBranch: string = 'master';
-    //currentFileHistoryData!: FileHistory;
+    selectedBranch: string = 'CW';
     currentFileHistoryData!: any;
     currentFile!: string;
     isListFileData: boolean = false;
     dateList!: any[];
     revisionList!: string[];
+    loggedInUser!: string;
+    mode!: string;
+    revisionSelectedTabIndex: number = 0;
 
-    determineVersion(data: any[]) {
-        if (CommonConstants.calenarVersion) {
-            this.dataVersion = this.getCalendarVersion(data);
-        }
-
-        if (CommonConstants.semanticVersion) {
-            return '';
-        }
-        return '';
+    getLoggedInUser() {
+        return window.localStorage.getItem('userName');
     }
+
+    // determineVersion(data: any[]) {
+    //     if (CommonConstants.calenarVersion) {
+    //         this.dataVersion = this.getCalendarVersion(data);
+    //     }
+
+    //     if (CommonConstants.semanticVersion) {
+    //         return '';
+    //     }
+    //     return '';
+    // }
 
     convertCsvToJason(sourceData: string): any[] {
         let workbook = XLSX.read(sourceData, { type: 'binary' });
@@ -86,7 +90,6 @@ export class DataService {
         return moment(date, 'YYYY-MM-DDTHH:mm')
             .format('YYYY-MM-DDTHH:mm')
             .toString();
-        //return date.toLocaleDateString;
     }
 
     isSameVersionDate(version: string): boolean {
@@ -128,11 +131,26 @@ export class DataService {
             const secondIndex = filePath.indexOf('/', firstIndex + 1);
             state = filePath.substring(firstIndex + 1, secondIndex);
             if (state.length > 2) {
-                //debugger;
                 state = this.getStateFromPath(filePath.substring(secondIndex));
             }
         }
 
         return state;
+    }
+
+    getFilename(file: string): string {
+        return file.substring(0, file.indexOf('.'));
+    }
+
+    checkInList(data: any[], val: string): boolean {
+        return data.some((x) => x === val);
+    }
+
+    removeFromList(data: any[], val: string): any[] {
+        return data.filter((x) => x !== val);
+    }
+
+    addToList(data: any[], val: string): any[] {
+        return [...data, val];
     }
 }

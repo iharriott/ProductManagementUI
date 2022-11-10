@@ -14,31 +14,35 @@ body {
     width: 30%;
 }
 
+table {
+    width: 100%;
+}
+
 .green-snackbar {
     background: rgb(50, 112, 73);
     color: white;
 }
 
-    .green-snackbar button {
-        background-color: rgb(29, 71, 44);
-        color: white;
-        border: none;
-    }
+.green-snackbar button {
+    background-color: rgb(29, 71, 44);
+    color: white;
+    border: none;
+}
 
 .red-snackbar {
     background: #f44336;
     color: white;
 }
 
-    .red-snackbar button {
-        background-color: #f44336;
-        color: white !important;
-        border: none;
-    }
+.red-snackbar button {
+    background-color: #f44336;
+    color: white !important;
+    border: none;
+}
 
 .table-column-header {
     font-weight: bold;
-    font-size: medium;
+    font-size: small;
     color: rgb(43, 43, 204);
 }
 
@@ -62,4 +66,89 @@ body {
     font-weight: bold;
     font-size: medium;
     color: blue;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+a.title {
+    color: white;
+    text-decoration: none;
+}
+
+.col-width-2 {
+    width: 200px;
+    font-size: small;
+}
+
+.col-width-3 {
+    width: 250px;
+    font-size: small;
+}
+
+.col-width {
+    width: 120px;
+    font-size: small;
+}
+
+tr.data-detail-row {
+    height: 0;
+}
+
+tr.data-element-row:not(.data-expanded-row):hover {
+    background: whitesmoke;
+}
+
+tr.data-element-row:not(.data-expanded-row):active {
+    background: #efefef;
+}
+
+.data-element-row td {
+    border-bottom-width: 0;
+}
+
+.data-element-detail {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e1e1e1;
+    box-shadow: inset 2px 3px 8px #c1c1c1;
+    border-radius: 8px;
+}
+
+.data-element-diagram {
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+}
+
+.data-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+}
+
+.data-element-description {
+    padding: 16px;
+}
+
+.data-element-description-attribution {
+    opacity: 0.5;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+.hide-row {
+    display: none;
 }

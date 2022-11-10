@@ -8,7 +8,7 @@
         <base href="/" />
     </head>
     <body>
-        <mat-toolbar>
+        <!-- <mat-toolbar>
             <button
                 mat-icon-button
                 *ngIf="sidenav.mode === 'over'"
@@ -18,7 +18,7 @@
                 <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
             </button>
             Product Management UI
-        </mat-toolbar>
+        </mat-toolbar> -->
 
         <mat-sidenav-container>
             <mat-sidenav #sidenav="matSidenav">
@@ -66,11 +66,17 @@
                 <div class="row">
                     <a type="button" [routerLink]="['dashboard']">DashBoard</a>
                 </div>
-                <div class="row">
-                    <a type="button" [routerLink]="['revision']"
+                <!-- <div class="row">
+                    <a type="button" click="onNavigateDashboard()"
+                        >DashBoard2</a
+                    >
+                </div> -->
+                <!-- <button (click)="onNavigateDashboard()">Token</button> -->
+                <!-- <div class="row">
+                    <a type="button" [routerLink]="['/revision']"
                         >Rate Revision</a
                     >
-                </div>
+                </div> -->
             </mat-sidenav>
             <mat-sidenav-content>
                 <div class="content mat-elevation-z4">

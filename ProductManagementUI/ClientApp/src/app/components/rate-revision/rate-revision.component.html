@@ -52,7 +52,10 @@
             <td mat-cell *matCellDef="let row">
                 <!-- <a mat-button (click)="loadData(row)">Load Details</a> -->
 
-                <mat-checkbox class="table-column-header" (click)="onClick(row)"
+                <mat-checkbox
+                    #c
+                    class="table-column-header"
+                    (click)="onClick(c.checked, row)"
                     >View Revision</mat-checkbox
                 >
             </td>

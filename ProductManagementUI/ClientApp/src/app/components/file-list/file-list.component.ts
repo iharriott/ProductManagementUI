@@ -5,14 +5,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import { Branch } from '../interfaces/branch';
-import { GitResult } from '../interfaces/git-result';
+import { FactorFile, FileStructure } from '../interfaces/factor-file';
 import {
     MatDialogRef,
     MatDialog,
     MAT_DIALOG_DATA
 } from '@angular/material/dialog';
 import { FileSelectionPopupComponent } from '../file-selection-popup/file-selection-popup.component';
+import { RateRevisions } from '../interfaces/rate-revisions';
 
 @Component({
     selector: 'app-file-list',
@@ -40,7 +40,7 @@ export class FileListComponent implements OnInit {
     columnHeadings!: string[];
     action: string = 'idAction001';
     selectedBranch!: string;
-    branchList!: string[];
+    factorFileList!: string[];
     view!: string;
     branchLoadComplete = false;
     dataLoaded = false;
@@ -55,7 +55,7 @@ export class FileListComponent implements OnInit {
         //debugger;
         this.setViewMode();
         this.onGetFiles();
-        this.getBranches();
+        this.getRateRevisions();
     }
 
     setViewMode() {
@@ -77,17 +77,26 @@ export class FileListComponent implements OnInit {
     }
 
     onGetFiles(): void {
-        this.apiService.getRatingTables(this.selectedBranch).subscribe(
-            (data: GitResult) => {
+        this.apiService.getRatingTables(this.selectedBranch, false).subscribe(
+            (data: FactorFile) => {
                 this.dataService.currentFileData = data;
                 this.fileSummaryData = data.result.map((fileData) => {
                     return {
-                        fileHistoryId: fileData.fileHistoryId,
                         fileName: fileData.fileName,
-                        fileId: fileData.fileId,
-                        state: this.dataService.getStateFromPath(
-                            fileData.fileId
+                        filePath: fileData.filePath,
+                        lastUpdated: this.dataService.getDateFromUTC(
+                            fileData.lastUpdated
                         ),
+                        effectiveDate: this.dataService.getDateFromUTC(
+                            fileData.effectiveDate
+                        ),
+                        renewalDate: this.dataService.getDateFromUTC(
+                            fileData.renewalDate
+                        ),
+                        fileVersionId: fileData.fileVersionId,
+                        // state: this.dataService.getStateFromPath(
+                        //     fileData.fileId
+                        // ),
                         lob: 'PPA'
                     };
                 });
@@ -97,9 +106,18 @@ export class FileListComponent implements OnInit {
                     this.fileSummaryData
                 );
                 //this.displayedColumns = [...this.columnHeadings, 'action'];
-                this.displayedColumns = ['fileName', 'state', 'lob', 'action'];
+                this.displayedColumns = [
+                    'fileName',
+                    'lob',
+                    'lastUpdated',
+                    'effectiveDate',
+                    'renewalDate',
+                    'fileVersionId',
+                    'action'
+                ];
                 this.dataLoaded = true;
-                // console.log(`column headings ${this.displayedColumns}`);
+                console.log(`column headings ${this.displayedColumns}`);
+                console.log(JSON.stringify(this.fileSummaryData));
             },
             (error: any) => console.log(error),
             () => console.log('Done retrieving users')
@@ -139,15 +157,16 @@ export class FileListComponent implements OnInit {
     }
 
     onBranchChange() {
+        // debugger;
         this.onGetFiles();
         this.dataService.selectedBranch = this.selectedBranch;
         this.branchLoadComplete = true;
         //console.log(this.selectedBranch);
     }
 
-    getBranches() {
-        this.apiService.getAllBranches().subscribe((data: Branch) => {
-            this.branchList = data.result;
+    getRateRevisions() {
+        this.apiService.getRateRevisions().subscribe((data: RateRevisions) => {
+            this.factorFileList = data.result;
         });
     }
 
@@ -162,20 +181,28 @@ export class FileListComponent implements OnInit {
     }
 
     goToDashboard() {
-        this.router.navigate(['dashboard']);
+        //debugger;
+        if (this.view == 'view' || this.view == 'edit')
+            this.router.navigate(['dashboard']);
+        else if (this.view === 'multirevision') {
+            this.router.navigate(['revision']);
+        }
     }
 
     onChange(event, row) {
         //debugger;
+        this.dataService.selectedBranch = this.selectedBranch;
         this.fileList = [...this.fileList, row];
         console.log(this.fileList);
     }
 
     onSelect() {
+        //debugger;
         if (this.fileList.length > 0) {
             this.dataService.isListFileData = true;
             this.dataService.filesData = this.fileList;
             this.router.navigate([this.navigatedRoute]);
+            console.log(this.route);
         } else {
             this.dialogData = this.dialogText;
             this.openDialog();
@@ -193,10 +220,10 @@ export class FileListComponent implements OnInit {
 
     viewHistory(row) {
         //debugger;
-        const { fileId, fileName } = row;
+        const { filePath, fileName } = row;
         console.log(row);
         this.dataService.currentFile = fileName;
-        const branch = this.selectedBranch;
-        this.router.navigate(['filehistory', this.selectedBranch, fileId]);
+        //const branch = this.selectedBranch;
+        this.router.navigate(['filehistory', fileName]);
     }
 }

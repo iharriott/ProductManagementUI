@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@types/jest": "^29.2.0"
+  },
+  "dependencies": {
+    "msal": "^1.4.17"
   }
 }

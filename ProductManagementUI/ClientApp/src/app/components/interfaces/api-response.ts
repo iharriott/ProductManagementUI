@@ -13,3 +13,14 @@ export interface Result {
     sucessfull: boolean;
     date: Date;
 }
+
+export interface FileSaveApiResonse {
+    fileName: string;
+    fileContent: string;
+    lastUpdated: Date;
+    effectiveDate: Date;
+    renewalDate: Date;
+    author: string;
+    filePath: string;
+    fileVersionId: string;
+}

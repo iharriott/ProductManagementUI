@@ -22,6 +22,9 @@ import { FileSelectionPopupComponent } from '../file-selection-popup/file-select
 import { FileHistoryListComponent } from '../file-history-list/file-history-list.component';
 import { RateRevisionComponent } from '../rate-revision/rate-revision.component';
 import { MultiRevisionViewComponent } from '../multi-revision-view/multi-revision-view.component';
+import { RouterModule, Routes } from '@angular/router';
+import { DataFormatterPipe } from '../pipes/data-formatter.pipe';
+import { StringReducePipe } from '../pipes/string-reduce.pipe';
 
 @NgModule({
     declarations: [
@@ -41,7 +44,9 @@ import { MultiRevisionViewComponent } from '../multi-revision-view/multi-revisio
         FileSelectionPopupComponent,
         FileHistoryListComponent,
         RateRevisionComponent,
-        MultiRevisionViewComponent
+        MultiRevisionViewComponent,
+        DataFormatterPipe,
+        StringReducePipe
     ],
     imports: [
         CommonModule,
@@ -50,7 +55,8 @@ import { MultiRevisionViewComponent } from '../multi-revision-view/multi-revisio
         ReactiveFormsModule,
         FormsModule,
         MatTableExporterModule,
-        NgMultiSelectDropDownModule.forRoot()
+        NgMultiSelectDropDownModule.forRoot(),
+        RouterModule
     ],
 
     exports: [

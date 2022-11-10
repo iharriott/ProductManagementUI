@@ -38,6 +38,15 @@
         View Details
     </button>
 
+    <!-- <button
+        mat-raised-button
+        color="primary"
+        (click)="toggleTableRows()"
+        class="button-width-load"
+    >
+        Show All Products
+    </button> -->
+
     <p class="text-font">Viewing History for File: {{ fileName }}</p>
 
     <!-- <button
@@ -58,24 +67,39 @@
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div> -->
 
-    <table mat-table [dataSource]="dataSource" matSort>
-        <!-- commitId Column -->
-        <ng-container matColumnDef="date">
+    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+        <!-- version Column -->
+        <!-- <ng-container matColumnDef="version">
             <th
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header
                 class="table-column-header"
             >
-                Date
+                Version
             </th>
             <td mat-cell *matCellDef="let row" class="row-width-dt">
-                {{ row.date }}
+                {{ row.version }}
             </td>
-        </ng-container>
+        </ng-container> -->
 
-        <!-- fileName Name Column -->
-        <ng-container matColumnDef="comment">
+        <!-- state Column -->
+        <!-- <ng-container matColumnDef="author">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Author
+            </th>
+            <td mat-cell *matCellDef="let row" class="row-width-dt">
+                {{ row.author }}
+            </td>
+        </ng-container> -->
+
+        <!-- comment Column -->
+        <!-- <ng-container matColumnDef="comment">
             <th
                 mat-header-cell
                 *matHeaderCellDef
@@ -87,27 +111,114 @@
             <td mat-cell *matCellDef="let row" class="row-width">
                 {{ row.comment }}
             </td>
-        </ng-container>
+        </ng-container> -->
 
-        <!-- state Column -->
-        <ng-container matColumnDef="authorName">
+        <!-- lastUpdated Column -->
+        <!-- <ng-container matColumnDef="lastUpdated">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Last Updated
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.lastUpdated }}</td>
+        </ng-container> -->
+
+        <!-- Effective Date Column -->
+        <!-- <ng-container matColumnDef="effectiveDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Effective Date
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.effectiveDate }}</td>
+        </ng-container> -->
+
+        <!-- Effective Date Column -->
+        <!-- <ng-container matColumnDef="renewalDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Renewal Date
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.renewalDate }}</td>
+        </ng-container> -->
+        <ng-container matColumnDef="fileVersionId">
             <th
                 mat-header-cell
                 *matHeaderCellDef
                 mat-sort-header
                 class="table-column-header"
             >
-                Author Name
+                File Version ID
             </th>
-            <td mat-cell *matCellDef="let row" class="row-width-dt">
-                {{ row.authorName }}
+            <td class="col-width-3" mat-cell *matCellDef="let row">
+                {{ row.fileVersionId }}
             </td>
         </ng-container>
 
-        <!-- path Column -->
-        <ng-container matColumnDef="fileId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>File Id</th>
-            <td mat-cell *matCellDef="let row">{{ row.fileId }}</td>
+        <ng-container matColumnDef="isLatestVersion">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Is Latest Version
+            </th>
+            <td class="col-width-2" mat-cell *matCellDef="let row">
+                {{ row.isLatestVersion }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fileContent">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                File Content
+            </th>
+            <td class="col-width-2" mat-cell *matCellDef="let row">
+                {{ row.fileContent }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+            <td
+                mat-cell
+                *matCellDef="let row"
+                [attr.colspan]="displayedColumns.length"
+            >
+                <div
+                    class="row example-element-detail"
+                    [@detailExpand]="row.isExpanded ? 'expanded' : 'collapsed'"
+                >
+                    <table>
+                        <tr class="th-center table-column-header">
+                            <th>Version</th>
+                            <th>Author</th>
+                            <th>Comment</th>
+                            <th>Last Updated Date</th>
+                            <th>Effective Date</th>
+                            <th>Renewal Date</th>
+                        </tr>
+
+                        <tr *ngFor="let data of row.data">
+                            <td class="col-width-2">{{ data.version }}</td>
+                            <td class="col-width-2">
+                                {{ data.author | stringReduce }}
+                            </td>
+                            <td class="col-width-2">
+                                {{ data.comment | stringReduce }}
+                            </td>
+                            <td class="col-width">
+                                {{ data.lastUpdated | dataFormatter }}
+                            </td>
+                            <td class="col-width">
+                                {{ data.effectiveDate | dataFormatter }}
+                            </td>
+                            <td class="col-width">
+                                {{ data.renewalDate | dataFormatter }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="action">
@@ -123,8 +234,16 @@
                 <!-- <a mat-button (click)="loadData(row)">Load Details</a> -->
 
                 <mat-checkbox class="table-column-header" (click)="onClick(row)"
-                    >View Details
+                    >View Data
                 </mat-checkbox>
+
+                <a
+                    *ngIf="row.data.length > 0"
+                    mat-button
+                    href="javascript:void()"
+                    (click)="row.isExpanded = !row.isExpanded"
+                    >Show Products</a
+                >
 
                 <!-- <button mat-button color="primary" (click)="viewHistory(row)">
                     View History
@@ -133,7 +252,18 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="example-element-row"
+            [class.data-expanded-row]="row.isExpanded"
+        ></tr>
+
+        <tr
+            mat-row
+            *matRowDef="let row; columns: ['expandedDetail']"
+            class="data-detail-row"
+        ></tr>
     </table>
     <div *ngIf="dataSource.data.length === 0" class="center">
         <mat-spinner class="wrapper" style="margin: 0 auto"></mat-spinner>
@@ -151,10 +281,10 @@
     </table> -->
     <div class="row" style="background-color: none; min-width: 900px">
         <div class="col-md-6" *ngIf="dataSource.data.length > 0">
-            <!-- <button mat-button color="primary" (click)="goToDashboard()">
+            <button mat-button color="primary" (click)="goBack()">
                 <mat-icon>fast_rewind</mat-icon>
                 Back
-            </button> -->
+            </button>
         </div>
         <div class="col-md-6">
             <mat-paginator

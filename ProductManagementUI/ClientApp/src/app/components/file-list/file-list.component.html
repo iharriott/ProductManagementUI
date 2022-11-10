@@ -7,7 +7,7 @@
             (selectionChange)="onBranchChange()"
         >
             <mat-option
-                *ngFor="let branch of branchList"
+                *ngFor="let branch of factorFileList"
                 [value]="branch"
                 class="button-width"
             >
@@ -48,14 +48,6 @@
 
     <table mat-table [dataSource]="dataSource" matSort>
         <!-- commitId Column -->
-        <ng-container matColumnDef="fileHistoryId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                FileHistory ID
-            </th>
-            <td mat-cell *matCellDef="let row">{{ row.fileHistoryId }}</td>
-        </ng-container>
-
-        <!-- fileName Name Column -->
         <ng-container matColumnDef="fileName">
             <th
                 mat-header-cell
@@ -65,13 +57,28 @@
             >
                 Rating Factor File
             </th>
-            <td mat-cell *matCellDef="let row">
+            <td class="col-width-2" mat-cell *matCellDef="let row">
                 {{ row.fileName }}
             </td>
         </ng-container>
 
+        <!-- fileName Name Column -->
+        <ng-container matColumnDef="filePath">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Factor Path
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.filePath }}
+            </td>
+        </ng-container>
+
         <!-- state Column -->
-        <ng-container matColumnDef="state">
+        <!-- <ng-container matColumnDef="state">
             <th
                 mat-header-cell
                 *matHeaderCellDef
@@ -81,7 +88,7 @@
                 State
             </th>
             <td mat-cell *matCellDef="let row">{{ row.state }}</td>
-        </ng-container>
+        </ng-container> -->
 
         <!-- line of business Column -->
         <ng-container matColumnDef="lob">
@@ -93,13 +100,69 @@
             >
                 Line of Business
             </th>
-            <td mat-cell *matCellDef="let row">{{ row.lob }}</td>
+            <td class="col-width" mat-cell *matCellDef="let row">
+                {{ row.lob }}
+            </td>
         </ng-container>
 
-        <!-- path Column -->
-        <ng-container matColumnDef="fileId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>File Id</th>
-            <td mat-cell *matCellDef="let row">{{ row.fileId }}</td>
+        <!-- lastupdated Column -->
+        <ng-container matColumnDef="lastUpdated">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Last Updated
+            </th>
+            <td class="col-width" mat-cell *matCellDef="let row">
+                {{ row.lastUpdated }}
+            </td>
+        </ng-container>
+
+        <!-- effectivedate Column -->
+        <ng-container matColumnDef="effectiveDate">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Effective Date
+            </th>
+            <td class="col-width" mat-cell *matCellDef="let row">
+                {{ row.effectiveDate }}
+            </td>
+        </ng-container>
+
+        <!-- Renewal Column -->
+        <ng-container matColumnDef="renewalDate">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Renewal Date
+            </th>
+            <td class="col-width" mat-cell *matCellDef="let row">
+                {{ row.renewalDate }}
+            </td>
+        </ng-container>
+
+        <!-- Renewal Column -->
+        <ng-container matColumnDef="fileVersionId">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="table-column-header"
+            >
+                Version
+            </th>
+            <td class="col-width-2" mat-cell *matCellDef="let row">
+                {{ row.fileVersionId }}
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="action">

@@ -1,7 +1,9 @@
 export interface FileSummary {
-    fileHistoryId: string;
     fileName: string;
-    fileId: string;
-    state: string;
+    filePath: string;
+    lastUpdated: Date;
+    effectiveDate: Date;
+    renewalDate: Date;
+    fileVersionId: string;
     lob: string;
 }

@@ -23,10 +23,11 @@ import { MessageService } from 'src/app/services/message.service';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { GitResult } from '../interfaces/git-result';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Branch } from '../interfaces/branch';
 import { FileSummary } from '../interfaces/file-summary';
-import { ApiResponse } from '../interfaces/api-response';
-import { History2 } from '../interfaces/file-history';
+import { ApiResponse, FileSaveApiResonse } from '../interfaces/api-response';
+import { History } from '../interfaces/file-history';
+import { RateRevisions } from '../interfaces/rate-revisions';
+import { RatingTable } from '../interfaces/rating-table';
 
 @Component({
     selector: 'app-file-upload',
@@ -60,7 +61,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
     @Input() filesList!: FileSummary;
-    @Input() filesHistoryList!: History2;
+    @Input() filesHistoryList!: History;
 
     selectedTableExportFormat: ExportType = this.tableExportFormats[0]
         .value as ExportType;
@@ -80,7 +81,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     fileName!: string;
     gitResponseObject!: GitResult;
     columnHeadings!: string[];
-    fileHistoryId!: string;
+    fileVersionId!: string;
     fileSavePath!: string;
     showHideLoader = false;
     showHideTitle = 'Show File Loader';
@@ -90,7 +91,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     viewState = false;
     formTitle!: string;
     defaultFilePath = '/CW/RatingFactors/Tables/';
-    comment!: string;
+    comment: string = 'updating file';
     fileLabel!: string;
     state!: string;
     isListFileData!: boolean;
@@ -101,27 +102,28 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
         decimalseparator: '.',
         showLabels: true,
         showTitle: false,
-        //title: 'Your title',
         useBom: true,
         noDownload: true,
         headers: this.columnHeadings
     };
 
     ngOnInit(): void {
-        //debugger;
         this.view = this.route.snapshot.data['view'];
         this.isListFileData = this.dataService.isListFileData;
         this.selectedBranch = this.dataService.selectedBranch;
+        if (this.view === 'viewhistory') {
+            this.isListFileData = false;
+        }
         if (this.view !== 'add') {
             this.setViewMode();
             if (this.isListFileData) {
-                this.onGetFiles();
+                this.onGetCurrentFile();
             } else {
-                this.onGetFileHistory();
+                this.onGetFiles();
             }
         }
 
-        this.getBranches();
+        this.getRateRevisions();
     }
 
     onShowHideFileLoader() {
@@ -138,32 +140,24 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
         this.fileLabel = this.view === 'edit' ? 'Editing File' : 'Viewing File';
     }
 
-    getBranches() {
-        this.apiService.getAllBranches().subscribe((data: Branch) => {
+    getRateRevisions() {
+        this.apiService.getRateRevisions().subscribe((data: RateRevisions) => {
             this.branchList = data.result;
         });
     }
 
     onGetFiles(): void {
         if (this.filesList !== undefined) {
-            this.fileHistoryId = this.filesList.fileHistoryId;
+            this.fileVersionId = this.filesList.fileVersionId;
             this.fileName = this.filesList.fileName;
-            this.fileSavePath = this.filesList.fileId;
+            this.fileSavePath = this.filesList.filePath;
         } else {
-            this.fileHistoryId = this.route.snapshot.params['fileHistoryId'];
+            this.fileVersionId = this.route.snapshot.params['fileHistoryId'];
             this.fileName = this.route.snapshot.params['fileName'];
             this.fileSavePath = this.route.snapshot.params['fileId'];
         }
-
-        console.log(
-            `fileHistoryId ${this.fileHistoryId} filename ${this.fileName} fileSavepath ${this.fileSavePath}`
-        );
         this.apiService
-            .getRatingFileContent(
-                this.selectedBranch,
-                this.fileSavePath,
-                this.fileHistoryId
-            )
+            .getFileContent(this.fileName, this.fileVersionId)
             .subscribe(
                 (data) => {
                     const { result } = data;
@@ -181,8 +175,31 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
             );
     }
 
+    onGetCurrentFile() {
+        this.fileName = this.filesList.fileName
+            ? this.filesList.fileName
+            : this.fileName;
+        this.apiService.getRatingTables(this.selectedBranch, true).subscribe(
+            (data: RatingTable) => {
+                const { result } = data;
+                const { fileContent, comment } = result.filter(
+                    (x) => x.fileName == this.fileName
+                )[0];
+                console.log(`${JSON.stringify(fileContent)}`);
+                const convertedJsonData =
+                    this.dataService.convertCsvToJason(fileContent);
+                this.dataSource.data = convertedJsonData;
+                this.columnHeadings =
+                    this.dataService.getColumnHeadings(convertedJsonData);
+                this.displayColumns = [...this.columnHeadings];
+                this.comment = comment;
+            },
+            (error: any) => console.log(error),
+            () => console.log('Done retrieving files')
+        );
+    }
+
     onGetFileHistory() {
-        //debugger;
         if (this.filesHistoryList !== undefined) {
             const { fileContent, comment } = this.filesHistoryList;
             const convertedJsonData =
@@ -210,7 +227,6 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     }
 
     save() {
-        // debugger;
         if (this.fileLoad) {
             this.fileSavePath = this.defaultFilePath + this.fileName;
             this.columnHeadings = Object.keys(this.dataSource.data[0]);
@@ -225,32 +241,29 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
         if (!this.fileLoad) {
             this.apiService
                 .updateRatingFile(
-                    this.fileSavePath,
+                    this.fileName,
                     convertedData,
-                    this.selectedBranch,
+                    'CW',
                     this.comment
                 )
                 .subscribe(
-                    (response: ApiResponse) => {
+                    (response: FileSaveApiResonse) => {
                         this.messageService.openSnackBar(
-                            `${response.result.fileName} was Successfully saved to branch ${response.result.branchName}`
+                            `File was Successfully saved to branch `
                         );
                     },
                     (error: ApiResponse) => {
                         this.messageService.openSnackBar(
-                            `Error occurred while saving ${this.fileName} to branch ${error.result.branchName}`
+                            `Error occurred while saving ${this.fileName} to branch ${error}`
                         );
+                        console.log(error);
                     },
                     () => console.log('Done updating file')
                 );
         } else {
+            this.fileName = this.dataService.getFilename(this.fileName);
             this.apiService
-                .addNewRatingFile(
-                    this.fileSavePath,
-                    convertedData,
-                    this.selectedBranch,
-                    this.comment
-                )
+                .addNewRatingFile(this.fileName, convertedData, this.comment)
                 .subscribe(
                     (response: ApiResponse) => {
                         this.messageService.openSnackBar(
@@ -283,17 +296,11 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
                     );
                     this.convertedJson = JSON.stringify(data, undefined, 4);
                     this.convertedJsonArray = JSON.parse(this.convertedJson);
-                    console.log(
-                        `LOADING ${JSON.stringify(
-                            Object.keys(this.convertedJsonArray[0])
-                        )}`
-                    );
                     this.fileHeadings = Object.keys(this.convertedJsonArray[0]);
                     this.dataSource.data = this.convertedJsonArray;
                     this.fileDataBeforeEdit = this.dataSource.data;
                     this.displayColumns = Object.keys(this.dataSource.data[0]);
                     this.fileName = file.name;
-                    // this.displayColumns = [...this.displayColumns, 'Action'];
                     this.displayColumns = [...this.displayColumns];
                 });
             };
@@ -302,7 +309,6 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     }
 
     download() {
-        //debugger;
         const data = this.dataSource.data;
         if (this.fileHeadings == undefined) {
             this.fileHeadings = Object.keys(this.dataSource.data[0]);
@@ -316,35 +322,6 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
         this.displayColumns = [];
         this.dataSource.data = [];
     }
-
-    // getDataFromDB() {
-    //     let dbData: any[];
-    //     let data;
-    //     this.fileLoad = false;
-    //     this.resetTable();
-    //     const url = this.determineUrl();
-    //     this.apiService.getAllData(url).subscribe((val) => {
-    //         dbData = [...val];
-    //         data = dbData[0].data;
-
-    //         if (typeof data === 'object') {
-    //             this.displayColumns = Object.keys(data[0]);
-    //             this.dataSource.data = [...data];
-    //         }
-
-    //         if (Array.isArray(data)) {
-    //             this.displayColumns = Object.keys(data[0]);
-    //             dbData.map((data) => {
-    //                 this.dataSource.data = [...this.dataSource.data, ...data];
-    //                 this.dataSource.data = this.dataSource.data.filter(
-    //                     (data) => data.id >= 1
-    //                 );
-    //             });
-    //         }
-    //         this.fileDataBeforeEdit = this.dataSource.data;
-    //         this.displayColumns = [...this.displayColumns, 'Action'];
-    //     });
-    // }
 
     async drop(event: any) {
         event.preventDefault();
@@ -365,100 +342,14 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
         this.loadFileData(selectedFile);
     }
 
-    idExists(id: any): boolean {
-        return this.fileDataBeforeEdit.some((x) => x.id === id);
-    }
-
-    // editData(data: any) {
-    //     this.disabled = !this.disabled;
-    //     if (this.fileLoad) {
-    //         if (!this.idExists(data.id)) {
-    //             this.dataSource.data = [...this.dataSource.data, data];
-    //         } else {
-    //             this.dataSource.data = R.map(
-    //                 this.updatedTableRow(data),
-    //                 this.dataSource.data
-    //             );
-    //         }
-    //     } else {
-    //         const url = this.determineUrl();
-    //         if (!this.idExists(data.id)) {
-    //             this.apiService.createData(url, data).subscribe({
-    //                 next: (res) => {
-    //                     this.messageService.openSnackBar(
-    //                         `Data updated Successfully`
-    //                     );
-    //                     this.getDataFromDB();
-    //                 },
-    //                 error: (err) => {
-    //                     this.messageService.openSnackBar(`Error updating data`);
-    //                 }
-    //             });
-    //         } else {
-    //             this.apiService.updateRow(url, data, data.id).subscribe({
-    //                 next: (res) => {
-    //                     this.messageService.openSnackBar(
-    //                         `Data updated Successfully`
-    //                     );
-    //                     this.getDataFromDB();
-    //                 },
-    //                 error: (err) => {
-    //                     this.messageService.openSnackBar(`Error updating data`);
-    //                 }
-    //             });
-    //         }
-    //     }
-    // }
-
-    getId(): number {
-        return (
-            Math.max(
-                ...this.dataSource.data.map((val: { id: any }) => val.id)
-            ) + 1
-        );
-    }
-
-    addRow() {
-        let row = this.dataSource[0];
-        row = { ...row, id: this.getId() };
-        this.dataSource.data = [row, ...this.dataSource.data];
-    }
-
-    // deleteRow(id: number) {
-    //     if (this.fileLoad) {
-    //         this.dataSource.data = this.dataSource.data.filter(
-    //             (x: { id: number }) => x.id !== id
-    //         );
-    //     } else {
-    //         this.apiService
-    //             .deleteRow(CommonConstants.cappingLevel, id)
-    //             .subscribe({
-    //                 next: (res) => {
-    //                     this.messageService.openSnackBar(
-    //                         `Data deleted Successfully`
-    //                     );
-    //                     this.getDataFromDB();
-    //                 },
-    //                 error: (err) => {
-    //                     this.messageService.openSnackBar(`Error deleting data`);
-    //                 }
-    //             });
-    //     }
-    // }
-
-    updatedTableRow = R.curry((updatedRow, data) => {
-        if (updatedRow.id == data.id) {
-            return { ...data, ...updatedRow };
-        }
-        return data;
-    });
-
     closeDialog(): void {
-        //this.dialogRef.close();
         if (this.view === 'view') {
-            this.router.navigate(['viewfilelist']);
-        } else {
+            //this.router.navigate(['viewfilelist']);
+            this.router.navigate(['multirevision']);
+        } else if (this.view === 'edit') {
             this.router.navigate(['editfilelist']);
+        } else if (this.view === 'viewhistory') {
+            this.router.navigate(['filehistory', this.fileName]);
         }
     }
 

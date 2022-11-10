@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import { Branch } from '../interfaces/branch';
+import { RateRevisions } from '../interfaces/rate-revisions';
 
 @Component({
     selector: 'app-rate-revision',
@@ -24,20 +24,17 @@ export class RateRevisionComponent implements OnInit {
     constructor(
         public dataService: DataService,
         private router: Router,
-        private route: ActivatedRoute,
         private apiService: ApiService
     ) {
         this.dataSource = new MatTableDataSource();
     }
 
     ngOnInit(): void {
-        //debugger;
-        this.getBranches();
+        this.getRateRevisions();
     }
 
-    getBranches() {
-        this.apiService.getAllBranches().subscribe((data: Branch) => {
-            console.log(`${JSON.stringify(data)}`);
+    getRateRevisions() {
+        this.apiService.getRateRevisions().subscribe((data: RateRevisions) => {
             this.branchList = data?.result.map((res: string) => {
                 return { revision: res };
             });
@@ -65,11 +62,26 @@ export class RateRevisionComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    onClick(row) {
-        //debugger;
-        this.selectedVersionlist = [...this.selectedVersionlist, row];
-        //this.dataService.revisionList =[...]
-        console.log(this.selectedVersionlist);
+    onClick(checked, row) {
+        if (
+            !checked &&
+            !this.dataService.checkInList(this.selectedVersionlist, row)
+        ) {
+            this.selectedVersionlist = this.dataService.addToList(
+                this.selectedVersionlist,
+                row
+            );
+        }
+
+        if (
+            checked &&
+            this.dataService.checkInList(this.selectedVersionlist, row)
+        ) {
+            this.selectedVersionlist = this.dataService.removeFromList(
+                this.selectedVersionlist,
+                row
+            );
+        }
     }
 
     viewHistory(row) {}
@@ -77,7 +89,6 @@ export class RateRevisionComponent implements OnInit {
     goToDashboard() {}
 
     onClickView() {
-        // debugger;
         this.dataService.revisionList = this.selectedVersionlist;
         this.router.navigate(['multirevision']);
     }

@@ -20,7 +20,7 @@
         "target": "es2020",
         "module": "es2020",
         "lib": ["es2020", "dom"],
-        "types": ["node"],
+        "types": ["node", "jest"],
         "paths": {
             "path": ["./node_modules/path-browserify"]
         }
@@ -29,6 +29,7 @@
         "enableI18nLegacyMessageIdFormat": false,
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
-        "strictTemplates": true
+        "strictTemplates": true,
+        "enableIvy": false
     }
 }

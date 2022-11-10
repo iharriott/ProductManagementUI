@@ -53,8 +53,9 @@ a:link {
 
 .table-column-header {
     font-weight: bold;
-    font-size: medium;
+    font-size: small;
     color: rgb(43, 43, 204);
+    justify-content: left;
 }
 
 th.mat-header-cell {
@@ -73,4 +74,14 @@ th.mat-header-cell {
     justify-content: right;
     float: right;
     margin-bottom: 8px;
+}
+
+.col-width-2 {
+    width: 200px;
+    font-size: small;
+}
+
+.col-width {
+    width: 120px;
+    font-size: small;
 }

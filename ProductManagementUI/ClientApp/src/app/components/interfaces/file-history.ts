@@ -9,10 +9,10 @@ export interface FileHistory {
 export interface Result {
     version: string;
     fileId: string;
-    history: History2[];
+    history: History[];
 }
 
-export interface History2 {
+export interface History {
     fileHistoryId: string;
     date: Date;
     comment: string;

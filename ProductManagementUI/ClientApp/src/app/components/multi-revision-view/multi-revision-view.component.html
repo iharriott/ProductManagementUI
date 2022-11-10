@@ -1,4 +1,8 @@
-<mat-tab-group mat-align-tabs="start">
+<mat-tab-group
+    mat-align-tabs="start"
+    [selectedIndex]="getSelectedTabIndex()"
+    (selectedTabChange)="onTabChange($event)"
+>
     <div *ngFor="let rev of revisionList">
         <mat-tab label="{{ rev.revision }}">
             <app-file-list [branch]="rev"></app-file-list>
