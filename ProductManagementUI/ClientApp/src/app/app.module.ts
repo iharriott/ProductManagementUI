@@ -74,8 +74,10 @@ function MSALConfigFactory(): Configuration {
             // authority:
             //     'https://login.microsoftonline.com/7389d8c0-3607-465c-a69f-7d4426502912/oauth2/authorize',
             validateAuthority: true,
-            redirectUri: 'http://localhost:4200/',
-            postLogoutRedirectUri: 'http://localhost:4200/',
+            //redirectUri: 'http://localhost:4200/',
+            //postLogoutRedirectUri: 'http://localhost:4200/',
+            redirectUri: environment.redirectUrl,
+            postLogoutRedirectUri: environment.postLogoutUrl,
             navigateToLoginRequestUrl: true
         },
         cache: {

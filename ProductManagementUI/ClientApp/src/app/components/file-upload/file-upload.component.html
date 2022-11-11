@@ -138,13 +138,7 @@
         <b>{{ fileLabel }}: {{ this.fileName }}</b>
     </p>
 
-    <table
-        matTableExporter
-        #exporter="matTableExporter"
-        mat-table
-        [dataSource]="dataSource"
-        matSort
-    >
+    <table mat-table [dataSource]="dataSource" matSort>
         <ng-container [matColumnDef]="col" *ngFor="let col of displayColumns">
             <th
                 mat-header-cell
