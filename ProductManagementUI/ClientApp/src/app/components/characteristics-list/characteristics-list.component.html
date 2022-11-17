@@ -1,0 +1,159 @@
+<h1 class="platform-gtr">GTR Platform</h1>
+<div class="banner"></div>
+<!-- <div class="container"> -->
+<p class="change-comp">Change Component</p>
+<div class="row">
+    <div class="col-md-4">
+        <mat-form-field class="select2" appearance="outline">
+            <mat-label>Select Artifact</mat-label>
+            <mat-select
+                [(ngModel)]="selectedCharacteristics"
+                name="exportType"
+                (selectionChange)="onSelectedChange()"
+            >
+                <mat-option
+                    *ngFor="let characteristics of characteristicsList"
+                    [value]="characteristics"
+                    class="button-width"
+                >
+                    {{ characteristics }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-md-4">
+        <a class="select2">
+            <mat-icon class="select2">file_download</mat-icon> DownLoad CSV
+        </a>
+    </div>
+    <div class="col-md-4">
+        <mat-form-field class="select2" appearance="outline">
+            <mat-label>Search for table name</mat-label>
+            <textarea
+                [(ngModel)]="tableName"
+                matInput
+                placeholder="tableName"
+            ></textarea>
+        </mat-form-field>
+    </div>
+</div>
+<!-- </div> -->
+<button
+    mat-raised-button
+    color="primary"
+    (click)="onClickView()"
+    class="button-width button-position"
+>
+    <mat-icon>visibility</mat-icon>
+    View Characteristics
+</button>
+<table mat-table [dataSource]="dataSource" matSort>
+    <!-- name Column -->
+    <ng-container matColumnDef="name">
+        <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table-column-header col-width-4"
+        >
+            Characteristics
+        </th>
+        <td class="col-width" mat-cell *matCellDef="let row">
+            {{ row.name }}
+        </td>
+    </ng-container>
+
+    <!-- fileVersionId Name Column -->
+    <ng-container matColumnDef="fileVersionId">
+        <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table-column-header"
+        >
+            File Version ID
+        </th>
+        <td mat-cell *matCellDef="let row">
+            {{ row.fileVersionId }}
+        </td>
+    </ng-container>
+
+    <!-- line of business Column -->
+    <ng-container matColumnDef="state">
+        <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table-column-header"
+        >
+            Type
+        </th>
+        <td class="col-width-4" mat-cell *matCellDef="let row">
+            {{ row.state }}
+        </td>
+    </ng-container>
+
+    <!-- lastupdated Column -->
+    <ng-container matColumnDef="dataType">
+        <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table-column-header"
+        >
+            Data Type
+        </th>
+        <td class="col-width-4" mat-cell *matCellDef="let row">
+            {{ row.dataType }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+        <th
+            mat-header-cell
+            class="th-center table-column-header"
+            *matHeaderCellDef
+            style="justify-content: left"
+        >
+            Action
+        </th>
+        <td mat-cell *matCellDef="let row">
+            <!-- <a mat-button (click)="loadData(row)">Load Details</a>  -->
+
+            <mat-checkbox
+                class="table-column-header"
+                (click)="onChange($event, row)"
+                >{{ checkBoxLabel }}</mat-checkbox
+            >
+            <!-- <button
+                mat-button
+                color="primary"
+                (click)="viewCharacteristics(row)"
+            >
+                View Characteristics
+            </button> -->
+        </td>
+    </ng-container>
+    -
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<div class="row" style="background-color: none; min-width: 900px">
+    <div class="col-md-6" *ngIf="dataSource.data.length > 0">
+        <button mat-button color="primary" (click)="goBack()">
+            <mat-icon>fast_rewind</mat-icon>
+            Back
+        </button>
+    </div>
+    <div class="col-md-6">
+        <mat-paginator
+            [hidden]="!dataSource.data.length"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            aria-label="Select page of
+            files"
+        >
+        </mat-paginator>
+    </div>
+</div>

@@ -23,6 +23,8 @@ export class DataService {
     loggedInUser!: string;
     mode!: string;
     revisionSelectedTabIndex: number = 0;
+    characteristicsList: any[] = [];
+    lob!: string;
 
     getLoggedInUser() {
         return window.localStorage.getItem('userName');
@@ -71,5 +73,9 @@ export class DataService {
 
     addToList(data: any[], val: string): any[] {
         return [...data, val];
+    }
+
+    checkCharacteristicsInList(data: any[], val: string): boolean {
+        return data.some((x) => x.name === val);
     }
 }

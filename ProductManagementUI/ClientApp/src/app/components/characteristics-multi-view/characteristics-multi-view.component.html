@@ -1,0 +1,9 @@
+<mat-tab-group mat-align-tabs="start">
+    <div *ngFor="let characteristic of characteristicsList">
+        <mat-tab label="{{ characteristic.name }}">
+            <app-characteristic-view
+                [currentCharacteristic]="characteristic"
+            ></app-characteristic-view>
+        </mat-tab>
+    </div>
+</mat-tab-group>

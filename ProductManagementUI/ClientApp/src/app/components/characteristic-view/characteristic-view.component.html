@@ -1,0 +1,75 @@
+<form [formGroup]="charactersiticsForm">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <h1 style="color: #004a9f">Characteristics</h1>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <mat-form-field
+                    class="example-full-width"
+                    appearance="standard"
+                >
+                    <mat-label>Schema Version</mat-label>
+                    <input
+                        formControlName="schemaVersion"
+                        matInput
+                        placeholder="SchemaVersion"
+                        value=""
+                    />
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field
+                    class="example-full-width"
+                    appearance="standard"
+                >
+                    <mat-label>Name</mat-label>
+                    <input
+                        formControlName="name"
+                        matInput
+                        placeholder="Name"
+                        value=""
+                    />
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field
+                    class="example-full-width"
+                    appearance="standard"
+                >
+                    <mat-label>Data Type</mat-label>
+                    <input
+                        formControlName="dataType"
+                        matInput
+                        placeholder="datatype"
+                        value=""
+                    />
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field
+                    class="example-full-width"
+                    appearance="standard"
+                >
+                    <mat-label>Description</mat-label>
+                    <textarea
+                        formControlName="description"
+                        matInput
+                        placeholder="Description"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="10"
+                    ></textarea>
+                    <!-- <input
+                            formControlName="description"
+                            matInput
+                            placeholder="Description"
+                            value=""
+                        /> -->
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</form>

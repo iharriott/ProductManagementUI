@@ -91,6 +91,11 @@ a.title {
     font-size: small;
 }
 
+.col-width-4 {
+    width: 80px;
+    font-size: small;
+}
+
 tr.data-detail-row {
     height: 0;
 }
@@ -151,4 +156,30 @@ tr.data-element-row:not(.data-expanded-row):active {
 
 .hide-row {
     display: none;
+}
+
+.banner {
+    width: 1440px;
+    height: 100px;
+    color: #f0f4fb;
+    left: 25px;
+    right: 300px;
+    top: 35px;
+    bottom: 0%;
+    background-color: #f0f4fb;
+}
+
+.select-margin {
+    margin-left: 10px;
+}
+
+.header-text {
+    color: black;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.search-button {
+    display: flex; /* or display:grid */
+    justify-content: center;
 }

@@ -28,4 +28,9 @@ export class DashboardComponent {
     addNewFile() {
         this.router.navigate(['addNewfile']);
     }
+
+    viewCharacteristics() {
+        // this.router.navigate(['characteristicslist']);
+        this.router.navigate(['productsearch']);
+    }
 }

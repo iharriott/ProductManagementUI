@@ -6,6 +6,11 @@ import { FactorFileContent } from '../components/interfaces/factor-file';
 import { RateRevisions } from '../components/interfaces/rate-revisions';
 import { DataService } from './data.service';
 import { RatingChanges } from '../components/interfaces/rating-changes';
+import { CharacteristicsDefinition } from '../components/interfaces/characteristicsDefinition';
+import {
+    CharacteristicDetail,
+    CharacteristicsRoot
+} from '../components/interfaces/characteristic-detail';
 
 @Injectable({
     providedIn: 'root'
@@ -43,6 +48,31 @@ export class ApiService {
         const apiAction = 'GetRatingChanges';
         this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}?includeContent=${includeContent}`;
         return this.http.get<RatingChanges>(this.endpoint);
+    }
+
+    getCharacteristicsDetails(
+        characteristic: string,
+        fileVersionId: string,
+        includeContent: boolean
+    ): Observable<CharacteristicsRoot> {
+        const apiAction = 'GetCharacteristics';
+        // this.endpoint = `${this.baseUrl}/${apiAction}/${characteristic}?fileVersionId=${fileVersionId}?includeContent=${includeContent}`;
+        this.endpoint = `${this.baseUrl}/${apiAction}/${characteristic}?includeContent=${includeContent}`;
+        return this.http.get<CharacteristicsRoot>(this.endpoint);
+    }
+
+    getProductDefinitionFamily(filter: string): Observable<any> {
+        const apiAction = 'GetProductDefinitions';
+        this.endpoint = `${this.baseUrl}/${apiAction}?filter=${filter}`;
+        return this.http.get<any>(this.endpoint);
+    }
+
+    getCharacteristics(
+        productDefinition: string
+    ): Observable<CharacteristicsDefinition> {
+        const apiAction = 'GetProductDefinitionCharacteristics';
+        this.endpoint = `${this.baseUrl}/${apiAction}/${productDefinition}`;
+        return this.http.get<CharacteristicsDefinition>(this.endpoint);
     }
 
     updateRatingFile(

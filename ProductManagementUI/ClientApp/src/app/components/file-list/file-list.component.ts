@@ -52,14 +52,12 @@ export class FileListComponent implements OnInit {
     dialogText!: string;
 
     ngOnInit(): void {
-        //debugger;
         this.setViewMode();
         this.onGetFiles();
         this.getRateRevisions();
     }
 
     setViewMode() {
-        //debugger;
         if (this.branch !== undefined) {
             this.selectedBranch = this.branch.revision;
         } else {
@@ -94,9 +92,6 @@ export class FileListComponent implements OnInit {
                             fileData.renewalDate
                         ),
                         fileVersionId: fileData.fileVersionId,
-                        // state: this.dataService.getStateFromPath(
-                        //     fileData.fileId
-                        // ),
                         lob: 'PPA'
                     };
                 });
@@ -105,7 +100,6 @@ export class FileListComponent implements OnInit {
                 this.columnHeadings = this.dataService.getColumnHeadings(
                     this.fileSummaryData
                 );
-                //this.displayedColumns = [...this.columnHeadings, 'action'];
                 this.displayedColumns = [
                     'fileName',
                     'lob',
@@ -124,23 +118,6 @@ export class FileListComponent implements OnInit {
         );
     }
 
-    // onGetFileFromCache() {
-    //     const cacheData = this.dataService.currentFileData;
-    //     this.fileSummaryData = cacheData.result.map((fileData) => {
-    //         return {
-    //             commitId: fileData.commitId,
-    //             fileName: fileData.fileName,
-    //             path: fileData.path
-    //         };
-    //     });
-    //     this.dataSource.data = [...this.fileSummaryData];
-
-    //     this.columnHeadings = this.dataService.getColumnHeadings(
-    //         this.fileSummaryData
-    //     );
-    //     this.displayedColumns = [...this.columnHeadings, 'action'];
-    // }
-
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -157,11 +134,9 @@ export class FileListComponent implements OnInit {
     }
 
     onBranchChange() {
-        // debugger;
         this.onGetFiles();
         this.dataService.selectedBranch = this.selectedBranch;
         this.branchLoadComplete = true;
-        //console.log(this.selectedBranch);
     }
 
     getRateRevisions() {
@@ -171,7 +146,6 @@ export class FileListComponent implements OnInit {
     }
 
     loadData(row) {
-        // debugger;
         const { fileHistoryId, fileName, fileId } = row;
         if (this.view === 'edit') {
             this.router.navigate(['editfile', fileHistoryId, fileName, fileId]);
@@ -181,7 +155,6 @@ export class FileListComponent implements OnInit {
     }
 
     goToDashboard() {
-        //debugger;
         if (this.view == 'view' || this.view == 'edit')
             this.router.navigate(['dashboard']);
         else if (this.view === 'multirevision') {
@@ -189,15 +162,13 @@ export class FileListComponent implements OnInit {
         }
     }
 
-    onChange(event, row) {
-        //debugger;
+    onChange(row) {
         this.dataService.selectedBranch = this.selectedBranch;
         this.fileList = [...this.fileList, row];
         console.log(this.fileList);
     }
 
     onSelect() {
-        //debugger;
         if (this.fileList.length > 0) {
             this.dataService.isListFileData = true;
             this.dataService.filesData = this.fileList;
@@ -219,11 +190,9 @@ export class FileListComponent implements OnInit {
     }
 
     viewHistory(row) {
-        //debugger;
-        const { filePath, fileName } = row;
+        const { fileName } = row;
         console.log(row);
         this.dataService.currentFile = fileName;
-        //const branch = this.selectedBranch;
         this.router.navigate(['filehistory', fileName]);
     }
 }

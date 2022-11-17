@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MsalGuard } from '@azure/msal-angular';
 import { ProductDefinitionComponent } from '../app/components/product-definition/product-definition.component';
 import { CappingRuleComponent } from './components/capping-rule/capping-rule.component';
+import { CharacteristicsListComponent } from './components/characteristics-list/characteristics-list.component';
+import { CharacteristicsMultiViewComponent } from './components/characteristics-multi-view/characteristics-multi-view.component';
 import { CharacteristicsComponent } from './components/characteristics/characteristics.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DataEditorListComponent } from './components/data-editor-list/data-editor-list.component';
@@ -14,6 +16,8 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
 import { HomeComponent } from './components/home/home.component';
 import { MultiEditComponent } from './components/multi-edit/multi-edit.component';
 import { MultiRevisionViewComponent } from './components/multi-revision-view/multi-revision-view.component';
+import { ProductSearchComponent } from './components/product-search/product-search.component';
+import { ProductionDefinitionSearchResultsComponent } from './components/production-definition-search-results/production-definition-search-results.component';
 import { RateRevisionComponent } from './components/rate-revision/rate-revision.component';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 //import { MsalGuard } from '@azure/msal-angular';
@@ -74,6 +78,26 @@ const routes: Routes = [
                 path: 'viewfilehistory/:fileHistoryId/:fileName',
                 component: FileUploadComponent,
                 data: { view: 'viewhistory' }
+            },
+            {
+                path: 'characteristicslist',
+                component: CharacteristicsListComponent,
+                data: { view: 'characteristicslist' }
+            },
+            {
+                path: 'characteristicsview',
+                component: CharacteristicsMultiViewComponent,
+                data: { view: 'characteristicsview' }
+            },
+            {
+                path: 'productsearch',
+                component: ProductSearchComponent,
+                data: { view: 'characteristicsview' }
+            },
+            {
+                path: 'productsearchresult',
+                component: ProductionDefinitionSearchResultsComponent,
+                data: { view: 'characteristicsview' }
             }
         ]
     },

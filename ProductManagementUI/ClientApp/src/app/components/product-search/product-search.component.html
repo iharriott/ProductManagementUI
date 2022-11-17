@@ -1,0 +1,72 @@
+<div class="banner">
+    <span class="header-text">Search for a Product ID</span>
+</div>
+<form [formGroup]="productsearchForm">
+    <div class="row select-margin">
+        <mat-form-field appearance="outline" class="field-width col-width">
+            <mat-label>Select LOB</mat-label>
+            <mat-select name="lob" formControlName="lob">
+                <mat-option
+                    *ngFor="let lob of lobList"
+                    [value]="lob"
+                    class="button-width"
+                >
+                    {{ lob }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row select-margin">
+        <mat-form-field appearance="outline" class="field-width col-width">
+            <mat-label>Select State</mat-label>
+            <mat-select name="state" formControlName="state">
+                <mat-option
+                    *ngFor="let state of stateList"
+                    [value]="state.name"
+                    class="button-width"
+                >
+                    {{ state.description }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row select-margin">
+        <mat-form-field appearance="outline" class="field-width col-width">
+            <mat-label>Select Company</mat-label>
+            <mat-select name="company" formControlName="company">
+                <mat-option
+                    *ngFor="let company of companyList"
+                    [value]="company"
+                    class="button-width"
+                >
+                    {{ company }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row select-margin">
+        <mat-form-field appearance="outline" class="field-width col-width">
+            <mat-label>Select Product</mat-label>
+            <mat-select name="company" formControlName="company">
+                <mat-option
+                    *ngFor="let product of productfamilyList"
+                    [value]="product"
+                    class="button-width"
+                >
+                    {{ product }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row search-button">
+        <button
+            mat-raised-button
+            color="primary"
+            (click)="search()"
+            class="button-width"
+        >
+            <mat-icon>search</mat-icon>
+            Search
+        </button>
+    </div>
+</form>
