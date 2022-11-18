@@ -23,3 +23,8 @@ export interface Characteristics {
     id: number;
     name: string;
 }
+
+export interface States {
+    code: string;
+    name: string;
+}

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
+import { ApiService } from 'src/app/services/api.service';
+import { CommonConstants } from 'src/app/constants/common-constants';
 
 @Component({
     selector: 'app-product-search',
@@ -10,18 +12,17 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class ProductSearchComponent implements OnInit {
     productsearchForm!: FormGroup;
-    lobList = ['Auto'];
-    stateList = [
-        { name: 'CA', description: 'California' },
-        { name: 'NY', description: 'New York' }
-    ];
-    companyList = ['Geico'];
-    productfamilyList = ['GAPP'];
+    envList;
+    lobList;
+    stateList = CommonConstants.states;
+    companyList;
+    productfamilyList;
 
     constructor(
         private fb: FormBuilder,
         private dataService: DataService,
-        private router: Router
+        private router: Router,
+        private apiService: ApiService
     ) {}
 
     ngOnInit(): void {
@@ -32,6 +33,10 @@ export class ProductSearchComponent implements OnInit {
             company: [''],
             environment: ['']
         });
+        this.getCompany();
+        this.getLOB();
+        this.GetProductFamilies();
+        this.GetEnvironment();
     }
 
     search() {
@@ -39,5 +44,52 @@ export class ProductSearchComponent implements OnInit {
         this.dataService.lob = lob;
         this.router.navigate(['productsearchresult']);
         //console.log(lob);
+    }
+    getCompany(): void {
+        this.apiService.getComopany().subscribe(
+        ({ result }) => {       
+        this.companyList = [...result];
+        },
+        (error) => {},
+        () => {
+        console.log('completed fetching company');
+        }
+        );
+    }
+
+    getLOB(): void {
+        this.apiService.getLOB().subscribe(
+        ({ result }) => {       
+        this.lobList = [...result];        
+        },
+        (error) => {},
+        () => {
+        console.log('completed fetching LOB');
+        }
+        );
+    }
+
+    GetProductFamilies(): void {
+        this.apiService.GetProductFamilies().subscribe(
+        ({ result }) => {   
+        this.productfamilyList = [...result];       
+        },
+        (error) => {},
+        () => {
+        console.log('completed fetching ProductFamilies');
+        }
+        );
+    }
+
+    GetEnvironment(): void {
+        this.apiService.getEnvironment().subscribe(
+        ({ result }) => {   
+        this.envList = [...result];       
+        },
+        (error) => {},
+        () => {
+        console.log('completed fetching Environment');
+        }
+        );
     }
 }

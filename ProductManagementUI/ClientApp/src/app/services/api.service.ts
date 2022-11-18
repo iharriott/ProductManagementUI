@@ -11,6 +11,7 @@ import {
     CharacteristicDetail,
     CharacteristicsRoot
 } from '../components/interfaces/characteristic-detail';
+import { BaseTableResponse } from '../components/interfaces/BaseTableResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -124,4 +125,30 @@ export class ApiService {
         this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}/${fileVersionId}`;
         return this.http.get<FactorFileContent>(this.endpoint);
     }
+    
+    
+    getComopany(): Observable<BaseTableResponse> {
+        const apiAction = 'GetCompanies';
+        this.endpoint = `${this.baseUrl}/${apiAction}`;
+        return this.http.get<BaseTableResponse>(this.endpoint);
+    }
+
+    getLOB(): Observable<BaseTableResponse> {
+        const apiAction = 'GetLOB';
+        this.endpoint = `${this.baseUrl}/${apiAction}`;
+        return this.http.get<BaseTableResponse>(this.endpoint);
+    }
+
+    GetProductFamilies(): Observable<BaseTableResponse> {
+        const apiAction = 'GetProductFamilies';
+        this.endpoint = `${this.baseUrl}/${apiAction}`;
+        return this.http.get<BaseTableResponse>(this.endpoint);
+    }
+
+    getEnvironment(): Observable<BaseTableResponse> {
+        const apiAction = 'GetProductStatuses';
+        this.endpoint = `${this.baseUrl}/${apiAction}`;
+        return this.http.get<BaseTableResponse>(this.endpoint);
+    }
+        
 }

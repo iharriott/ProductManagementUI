@@ -3,35 +3,35 @@
 </div>
 <form [formGroup]="productsearchForm">
     <div class="row select-margin">
-        <mat-form-field appearance="outline" class="field-width col-width">
-            <mat-label>Select LOB</mat-label>
-            <mat-select name="lob" formControlName="lob">
+        <mat-form-field appearance="outline" class="field-width col-width-2">
+            <mat-label>Select Environment</mat-label>
+            <mat-select name="environment" formControlName="environment">
                 <mat-option
-                    *ngFor="let lob of lobList"
-                    [value]="lob"
+                    *ngFor="let env of envList"
+                    [value]="env"
                     class="button-width"
                 >
-                    {{ lob }}
+                    {{ env }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <div class="row select-margin">
-        <mat-form-field appearance="outline" class="field-width col-width">
+        <mat-form-field appearance="outline" class="field-width col-width-2">
             <mat-label>Select State</mat-label>
             <mat-select name="state" formControlName="state">
                 <mat-option
                     *ngFor="let state of stateList"
-                    [value]="state.name"
+                    [value]="state.code"
                     class="button-width"
                 >
-                    {{ state.description }}
+                    {{ state.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     <div class="row select-margin">
-        <mat-form-field appearance="outline" class="field-width col-width">
+        <mat-form-field appearance="outline" class="field-width col-width-2">
             <mat-label>Select Company</mat-label>
             <mat-select name="company" formControlName="company">
                 <mat-option
@@ -45,9 +45,23 @@
         </mat-form-field>
     </div>
     <div class="row select-margin">
-        <mat-form-field appearance="outline" class="field-width col-width">
+        <mat-form-field appearance="outline" class="field-width col-width-2">
+            <mat-label>Select LOB</mat-label>
+            <mat-select name="lob" formControlName="lob">
+                <mat-option
+                    *ngFor="let lob of lobList"
+                    [value]="lob"
+                    class="button-width"
+                >
+                    {{ lob }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row select-margin">
+        <mat-form-field appearance="outline" class="field-width col-width-2">
             <mat-label>Select Product</mat-label>
-            <mat-select name="company" formControlName="company">
+            <mat-select name="productFamily" formControlName="productFamily">
                 <mat-option
                     *ngFor="let product of productfamilyList"
                     [value]="product"
