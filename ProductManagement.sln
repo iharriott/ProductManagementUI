@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManagementUI", "ProductManagementUI\ProductManagementUI.csproj", "{1BF301AE-8949-4BA4-963E-C5D20EF4ED7D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{83E1715F-9BC4-4C4B-8A51-18028ADD1634}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManagementUI.FunctionalTests", "ProductManagementUI.FunctionalTests\ProductManagementUI.FunctionalTests.csproj", "{C7CA6734-C55C-4AC2-9CDA-3DA5A4E069D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManagementUI", "ProductManagementUI\ProductManagementUI.csproj", "{1BF301AE-8949-4BA4-963E-C5D20EF4ED7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +15,9 @@ Global
 		{1BF301AE-8949-4BA4-963E-C5D20EF4ED7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BF301AE-8949-4BA4-963E-C5D20EF4ED7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BF301AE-8949-4BA4-963E-C5D20EF4ED7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7CA6734-C55C-4AC2-9CDA-3DA5A4E069D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7CA6734-C55C-4AC2-9CDA-3DA5A4E069D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7CA6734-C55C-4AC2-9CDA-3DA5A4E069D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7CA6734-C55C-4AC2-9CDA-3DA5A4E069D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{C7CA6734-C55C-4AC2-9CDA-3DA5A4E069D4} = {83E1715F-9BC4-4C4B-8A51-18028ADD1634}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2CFDA318-E59F-46F8-88B1-7410EC8CDFA0}
