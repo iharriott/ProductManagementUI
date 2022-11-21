@@ -13,6 +13,11 @@ import {
 } from '../components/interfaces/characteristic-detail';
 import { BaseTableResponse } from '../components/interfaces/BaseTableResponse';
 
+
+import { ProductSearch } from '../components/interfaces/product-search';
+import { ProductDefinitionDetail } from '../components/interfaces/product-definition-detail';
+
+
 @Injectable({
     providedIn: 'root'
 })
@@ -51,6 +56,24 @@ export class ApiService {
         return this.http.get<RatingChanges>(this.endpoint);
     }
 
+
+    GetProductsInFamilyAndState(
+        inputData: ProductSearch
+    ): Observable<BaseTableResponse> {
+        const { lob } = inputData;
+        const apiAction = 'GetProductsInFamilyAndState';
+        this.endpoint = `${this.baseUrl}/${apiAction}?lob=${lob}`;
+        return this.http.post<BaseTableResponse>(this.endpoint, {});
+    }
+
+    GetProductDefinitionsDetails(
+        productFilter: string
+    ): Observable<ProductDefinitionDetail> {
+        const apiAction = 'GetProductDefinitionsDetails';
+        this.endpoint = `${this.baseUrl}/${apiAction}?filter=${productFilter}`;
+        return this.http.get<ProductDefinitionDetail>(this.endpoint);
+    }
+
     getCharacteristicsDetails(
         characteristic: string,
         fileVersionId: string,
@@ -69,12 +92,15 @@ export class ApiService {
     }
 
     getCharacteristics(
-        productDefinition: string
+        productDefinition: string,
+        includeRefinement: boolean,
+        includeValidation: boolean
     ): Observable<CharacteristicsDefinition> {
         const apiAction = 'GetProductDefinitionCharacteristics';
-        this.endpoint = `${this.baseUrl}/${apiAction}/${productDefinition}`;
+        this.endpoint = `${this.baseUrl}/${apiAction}/${productDefinition}?includeRefinement=${includeRefinement}&includeRefinement=${includeValidation}`;
         return this.http.get<CharacteristicsDefinition>(this.endpoint);
     }
+
 
     updateRatingFile(
         fileName: string,

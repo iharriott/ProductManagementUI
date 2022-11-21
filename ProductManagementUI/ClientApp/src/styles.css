@@ -87,7 +87,7 @@ a.title {
 }
 
 .col-width {
-    width: 120px;
+    width: 1420px;
     font-size: small;
 }
 
@@ -166,7 +166,7 @@ tr.data-element-row:not(.data-expanded-row):active {
     right: 300px;
     top: 35px;
     bottom: 0%;
-    background-color: #f0f4fb;
+    background-color: #3f51b5;
 }
 
 .select-margin {
@@ -174,12 +174,24 @@ tr.data-element-row:not(.data-expanded-row):active {
 }
 
 .header-text {
-    color: black;
-    font-weight: 700;
-    font-size: 24px;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    margin-left: 20px;
+}
+
+.header-text2 {
+    color: white;
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 20px;
 }
 
 .search-button {
     display: flex; /* or display:grid */
     justify-content: center;
+}
+
+.link-hover {
+    cursor: pointer;
 }

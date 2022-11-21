@@ -32,6 +32,9 @@ export class CharacteristicsListComponent implements OnInit {
     response!: CharacteristicsDetail[];
     displayedColumns;
     checkBoxLabel = 'View Characteristics';
+    rateRevision;
+    effectiveDate;
+    renewalDate;
 
     constructor(
         private apiService: ApiService,
@@ -42,6 +45,12 @@ export class CharacteristicsListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        const { Identifier, NewBusinessDate, RenewalDate } =
+            this.dataService.selectProductCharacteristics;
+        this.rateRevision = Identifier;
+        this.effectiveDate = NewBusinessDate;
+        this.renewalDate = RenewalDate;
+
         this.getCharacteristics();
     }
 
@@ -63,30 +72,35 @@ export class CharacteristicsListComponent implements OnInit {
     onSelectedChange() {}
 
     getCharacteristics(): void {
-        this.apiService.getCharacteristics('CW').subscribe(
-            ({ result }) => {
-                const data = result.map(
-                    ({ name, fileVersionId, dataType, state }) => {
-                        return {
-                            name,
-                            fileVersionId,
-                            state,
-                            dataType
-                        };
-                    }
-                );
-                this.displayedColumns = this.dataService
-                    .getColumnHeadings(data)
-                    .filter((x) => x !== 'fileVersionId');
-                this.displayedColumns = [...this.displayedColumns, 'action'];
-                this.dataSource.data = data;
-                console.log(JSON.stringify(this.displayedColumns));
-            },
-            (error) => {},
-            () => {
-                console.log('completed fetching characteristics');
-            }
-        );
+        this.apiService
+            .getCharacteristics(this.rateRevision, false, false)
+            .subscribe(
+                ({ result }) => {
+                    const data = result.map(
+                        ({ name, fileVersionId, dataType, state }) => {
+                            return {
+                                name,
+                                fileVersionId,
+                                state,
+                                dataType
+                            };
+                        }
+                    );
+                    this.displayedColumns = this.dataService
+                        .getColumnHeadings(data)
+                        .filter((x) => x !== 'fileVersionId');
+                    this.displayedColumns = [
+                        ...this.displayedColumns,
+                        'action'
+                    ];
+                    this.dataSource.data = data;
+                    console.log(JSON.stringify(this.displayedColumns));
+                },
+                (error) => {},
+                () => {
+                    console.log('completed fetching characteristics');
+                }
+            );
     }
 
     viewCharacteristics(row) {}

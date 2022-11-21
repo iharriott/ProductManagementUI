@@ -31,6 +31,8 @@ import { CharacteristicsMultiViewComponent } from './characteristics-multi-view/
 import { CharacteristicViewComponent } from './characteristic-view/characteristic-view.component';
 import { ProductSearchComponent } from './product-search/product-search.component';
 import { ProductionDefinitionSearchResultsComponent } from './production-definition-search-results/production-definition-search-results.component';
+import { GenericGridComponent } from './generic-grid/generic-grid.component';
+import { StateFilingComponent } from './state-filing/state-filing.component';
 
 @NgModule({
     declarations: [
@@ -58,7 +60,9 @@ import { ProductionDefinitionSearchResultsComponent } from './production-definit
         CharacteristicsMultiViewComponent,
         CharacteristicViewComponent,
         ProductSearchComponent,
-        ProductionDefinitionSearchResultsComponent
+        ProductionDefinitionSearchResultsComponent,
+        GenericGridComponent,
+        StateFilingComponent
     ],
     imports: [
         CommonModule,

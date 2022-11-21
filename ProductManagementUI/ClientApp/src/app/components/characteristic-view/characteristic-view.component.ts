@@ -9,6 +9,7 @@ import {
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
 import * as XLSX from 'xlsx';
+import { Validation } from '../interfaces/characteristic-detail';
 
 @Component({
     selector: 'app-characteristic-view',
@@ -22,6 +23,8 @@ export class CharacteristicViewComponent implements OnInit {
     convertedJson;
     convertedJsonArray;
     fileContent;
+    jsonContent;
+    showJson = true;
     constructor(
         private fb: FormBuilder,
         private apiService: ApiService,
@@ -47,32 +50,108 @@ export class CharacteristicViewComponent implements OnInit {
                 this.apiReponse = response;
                 this.fileContent = this.apiReponse;
                 const { result } = this.apiReponse;
+                //const { Validations } = this.apiReponse;
                 const { fileContent } = result;
-                console.log(`file content ${fileContent}`);
+                //console.log(`api validation ${JSON.stringify(validations)}`);
                 const parsedJson = JSON.parse(fileContent);
-                const json = JSON.stringify(fileContent, undefined, 4);
+                const json = JSON.stringify(parsedJson, undefined, 4);
+                this.jsonContent = json;
                 console.log(`file content ${fileContent}`);
-                const { SchemaVersion, Name, Description, DataType } =
-                    parsedJson;
-                const descriptionText = JSON.stringify(Description);
+                const { schemaVersion, name, dataType, validations } = result;
+                // const { validValues } = validations[0];
+                //const Validations = result['validations'];
+                //console.log(`api validation ${JSON.stringify(validValues)}`);
+                //const descriptionText = JSON.stringify(Description);
                 //console.log(`file content ${JSON.parse(json)}`);
                 //this.convertContentToJson();
                 this.charactersiticsForm.patchValue({
-                    schemaVersion: SchemaVersion,
-                    name: Name,
-                    dataType: DataType,
-                    description: descriptionText
+                    schemaVersion: schemaVersion,
+                    name: name,
+                    dataType: dataType
                 });
+                if (validations) {
+                    this.setValidations(validations);
+                }
+
+                console.log(
+                    `form values ${JSON.stringify(
+                        this.charactersiticsForm.value
+                    )}`
+                );
             });
     }
 
-    convertContentToJson() {
-        let workbook = XLSX.read(this.fileContent, { type: 'binary' });
-        workbook.SheetNames.map((sheet) => {
-            const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-            this.convertedJson = JSON.stringify(data, undefined, 4);
-            this.convertedJsonArray = JSON.parse(this.convertedJson);
-            console.log(this.convertedJsonArray);
+    getValidValuesArray(validValuesGroup: AbstractControl): FormArray {
+        const validValuesArray = (validValuesGroup as FormGroup).get(
+            'validValues'
+        ) as FormArray;
+        return validValuesArray;
+    }
+
+    addValidationFormGroup(validation: Validation): FormGroup {
+        return this.fb.group({
+            name: validation.name,
+            validationType: validation.validationType,
+            validValues: this.fb.array([]),
+            expression: validation.expression,
+            parsedExpression: validation.parsedExpression,
+            errorMessage: validation.errorMessage
         });
+    }
+
+    addValidations(validationInput: Validation): void {
+        const validation = this.addValidationFormGroup(validationInput);
+        (<FormArray>this.charactersiticsForm.get('validations')).push(
+            validation
+        );
+        console.log(`the validation Array ${validation}`);
+    }
+
+    addValidValues(fieldGroup: AbstractControl, validVal: string): void {
+        const validValuesArray = fieldGroup.get('validValues') as FormArray;
+        console.log(`valid values ${validValuesArray}`);
+        console.log(`field group ${fieldGroup}`);
+        const value = this.addValidValuesControl(validVal);
+        validValuesArray.push(value);
+    }
+
+    addValidValuesControl(value) {
+        return new FormControl(value);
+    }
+
+    getValidations(): FormArray {
+        return this.charactersiticsForm.get('validations') as FormArray;
+    }
+
+    setValidations(validations: Validation[]): void {
+        //const formArray = new FormArray([]);
+        validations.forEach((validation) => {
+            const { validValues } = validation;
+            if (validValues) {
+                this.setValidValues(validValues);
+            }
+
+            console.log(`valid value in set ${JSON.stringify(validValues)}`);
+            this.addValidations(validation);
+        });
+    }
+
+    setValidValues(validValues: string[]) {
+        const validationsArray = this.getValidations() as FormArray;
+        console.log(
+            `validation array controls ${validationsArray.controls.values}`
+        );
+        //const validValuesArray = this.getValidValuesArray(validationsArray);
+        validValues.forEach((val) => {
+            this.addValidValues(validationsArray, val);
+        });
+    }
+
+    isValidationsExists(): number {
+        return this.getValidations().controls.length;
+    }
+
+    updateAllComplete() {
+        this.showJson = !this.showJson;
     }
 }

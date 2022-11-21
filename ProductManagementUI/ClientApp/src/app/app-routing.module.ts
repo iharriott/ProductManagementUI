@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
 import { ProductDefinitionComponent } from '../app/components/product-definition/product-definition.component';
 import { CappingRuleComponent } from './components/capping-rule/capping-rule.component';
 import { CharacteristicsListComponent } from './components/characteristics-list/characteristics-list.component';
@@ -20,6 +19,7 @@ import { ProductSearchComponent } from './components/product-search/product-sear
 import { ProductionDefinitionSearchResultsComponent } from './components/production-definition-search-results/production-definition-search-results.component';
 import { RateRevisionComponent } from './components/rate-revision/rate-revision.component';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
+import { StateFilingComponent } from './components/state-filing/state-filing.component';
 //import { MsalGuard } from '@azure/msal-angular';
 
 const routes: Routes = [
@@ -92,12 +92,17 @@ const routes: Routes = [
             {
                 path: 'productsearch',
                 component: ProductSearchComponent,
-                data: { view: 'characteristicsview' }
+                data: { view: 'productsearch' }
             },
             {
                 path: 'productsearchresult',
                 component: ProductionDefinitionSearchResultsComponent,
-                data: { view: 'characteristicsview' }
+                data: { view: 'productsearchresult' }
+            },
+            {
+                path: 'statefiling',
+                component: StateFilingComponent,
+                data: { view: 'statefiling' }
             }
         ]
     },

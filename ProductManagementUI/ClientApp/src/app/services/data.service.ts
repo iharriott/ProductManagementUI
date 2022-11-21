@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 import { FactorFile } from '../components/interfaces/factor-file';
+import { ProductSearch } from '../components/interfaces/product-search';
 
 @Injectable({
     providedIn: 'root'
@@ -23,8 +24,14 @@ export class DataService {
     loggedInUser!: string;
     mode!: string;
     revisionSelectedTabIndex: number = 0;
-    characteristicsList: any[] = [];
+
     lob!: string;
+
+    characteristicsList: any[] = [];
+    productSearchData!: ProductSearch;
+    searchedProduct!: string;
+    selectProductCharacteristics!: any;
+
 
     getLoggedInUser() {
         return window.localStorage.getItem('userName');

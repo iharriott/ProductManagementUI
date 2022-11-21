@@ -1,0 +1,74 @@
+<table mat-table [dataSource]="dataSource" matSort>
+    <ng-container
+        [matColumnDef]="col"
+        *ngFor="let col of displayColumns; let i = index"
+    >
+        <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table-column-header col-width-4"
+        >
+            {{ col }}
+        </th>
+        <td class="col-width" mat-cell *matCellDef="let row">
+            <div *ngIf="i === 0">
+                <button
+                    mat-button
+                    color="primary"
+                    (click)="navigateToDetail(row)"
+                >
+                    {{ row[col] }}
+                </button>
+                <!-- <a
+                    class="link-hover"
+                    href="javascript:void()"
+                    mat-button
+                    (click)="navigateToDetail(row[col])"
+                >
+                    {{ row[col] }}
+                </a> -->
+            </div>
+            <div *ngIf="i !== 0">
+                {{ row[col] }}
+            </div>
+        </td>
+
+        <!-- <th mat-header-cell *matHeaderCellDef class="mat-cell" mat-sort-header>
+            {{ col }}
+        </th>
+        <div *ngIf="col !== 'Action'">
+            <td mat-cell *matCellDef="let element">
+                <mat-form-field class="col-width">
+                    <input [type]="col" matInput [(ngModel)]="element[col]" />
+                </mat-form-field>
+            </td>
+        </div> -->
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+    <!-- Row shown when there is no matching data. -->
+    <div *ngIf="dataSource.data.length === 0">
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data</td>
+        </tr>
+    </div>
+</table>
+<div class="row" style="background-color: white">
+    <div class="col-md-6" *ngIf="dataSource.data.length > 0">
+        <button mat-button color="primary" (click)="goback()">
+            <mat-icon>fast_rewind</mat-icon>
+            Back
+        </button>
+    </div>
+    <div class="col-md-6">
+        <mat-paginator
+            [hidden]="!dataSource.data.length"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            aria-label="Select page of
+        files"
+        >
+        </mat-paginator>
+    </div>
+</div>

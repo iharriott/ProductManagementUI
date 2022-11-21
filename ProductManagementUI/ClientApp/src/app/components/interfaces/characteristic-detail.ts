@@ -39,3 +39,9 @@ export interface CharacteristicsRoot {
     message: string;
     result: CharacteristicDetail;
 }
+
+export interface BaseTableResponse {
+    statusCode: number;
+    message: string;
+    result: string[];
+}

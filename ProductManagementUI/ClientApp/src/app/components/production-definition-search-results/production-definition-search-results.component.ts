@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
 
@@ -9,22 +11,45 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class ProductionDefinitionSearchResultsComponent implements OnInit {
     productList: any[] = [];
+    dataSource;
+    displayColumns = ['product'];
+    tableData$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
     constructor(
         private dataService: DataService,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private router: Router
     ) {}
 
+    productSearchData;
+
     ngOnInit(): void {
-        const lob = this.dataService.lob;
-        this.apiService.getProductDefinitionFamily(lob).subscribe(
-            (data) => {
-                this.productList = data;
-                console.log(JSON.stringify(this.productList));
-            },
-            (error) => {
-                console.log(error);
-            },
-            () => console.log('completed')
-        );
+        this.productSearchData = this.dataService.productSearchData;
+        this.GetProductsInFamilyAndState();
+    }
+
+    GetProductsInFamilyAndState() {
+        this.apiService
+            .GetProductsInFamilyAndState(this.productSearchData)
+            .subscribe(
+                ({ result }) => {
+                    this.productList = result;
+                    //console.log(JSON.stringify(this.productList));
+                    this.dataSource = result.map((val) => {
+                        return { product: val };
+                    });
+                    console.log(JSON.stringify(this.dataSource));
+                    this.tableData$.next(this.dataSource);
+                },
+                (error) => {
+                    console.log(error);
+                },
+                () => console.log('completed')
+            );
+    }
+
+    goToProducts(event) {
+        const { product } = event;
+        this.dataService.searchedProduct = product;
+        this.router.navigate(['statefiling']);
     }
 }
