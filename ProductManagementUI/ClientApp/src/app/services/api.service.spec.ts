@@ -157,4 +157,48 @@ describe('DataService', () => {
         const returnEncodedPath = service.encodeUri(filePath);
         expect(encodedPath).toEqual(returnEncodedPath);
     });
+
+    it('should test getComopany', () => {
+        const res = 'Technoworld';
+        const apiAction = 'GetCompanies';
+        const endpoint = `${gitApiBaseUrl}/${apiAction}`;
+        jest.spyOn(httpService, 'get').mockReturnValue(of(res));
+        service.getComopany();
+
+        expect(httpService.get).toBeCalledTimes(1);
+        expect(httpService.get).toHaveBeenCalledWith(endpoint);
+    });
+
+    it('should test getLOB', () => {
+        const res = 'Technoworld';
+        const apiAction = 'GetLOB';
+        const endpoint = `${gitApiBaseUrl}/${apiAction}`;
+        jest.spyOn(httpService, 'get').mockReturnValue(of(res));
+        service.getLOB();
+
+        expect(httpService.get).toBeCalledTimes(1);
+        expect(httpService.get).toHaveBeenCalledWith(endpoint);
+    });
+
+    it('should test GetProductFamilies', () => {
+        const res = 'Technoworld';
+        const apiAction = 'GetProductFamilies';
+        const endpoint = `${gitApiBaseUrl}/${apiAction}`;
+        jest.spyOn(httpService, 'get').mockReturnValue(of(res));
+        service.GetProductFamilies();
+
+        expect(httpService.get).toBeCalledTimes(1);
+        expect(httpService.get).toHaveBeenCalledWith(endpoint);
+    });
+
+    it('should test getEnvironment', () => {
+        const res = 'Technoworld';
+        const apiAction = 'GetProductStatuses';
+        const endpoint = `${gitApiBaseUrl}/${apiAction}`;
+        jest.spyOn(httpService, 'get').mockReturnValue(of(res));
+        service.getEnvironment();
+
+        expect(httpService.get).toBeCalledTimes(1);
+        expect(httpService.get).toHaveBeenCalledWith(endpoint);
+    });
 });
