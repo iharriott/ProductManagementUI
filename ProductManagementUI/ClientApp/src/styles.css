@@ -195,3 +195,8 @@ tr.data-element-row:not(.data-expanded-row):active {
 .link-hover {
     cursor: pointer;
 }
+
+.button-width {
+    max-width: '300px';
+    margin-right: 10px;
+}

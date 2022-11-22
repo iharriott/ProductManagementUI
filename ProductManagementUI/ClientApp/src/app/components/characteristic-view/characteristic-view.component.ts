@@ -1,4 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import {
     AbstractControl,
     FormArray,
@@ -8,17 +16,31 @@ import {
 } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import * as XLSX from 'xlsx';
-import { Validation } from '../interfaces/characteristic-detail';
+import { Refinement, Validation } from '../interfaces/characteristic-detail';
+import { CommonConstants } from '../../constants/common-constants';
 
 @Component({
     selector: 'app-characteristic-view',
     templateUrl: './characteristic-view.component.html',
     styleUrls: ['./characteristic-view.component.css']
 })
-export class CharacteristicViewComponent implements OnInit {
+export class CharacteristicViewComponent implements OnInit, AfterViewInit {
     @Input() currentCharacteristic!: any;
+    @ViewChild('container', { read: ViewContainerRef, static: true })
+    public container!: ViewContainerRef;
+    @ViewChild('rawCharacteristics', { static: true })
+    public rawChar!: TemplateRef<any>;
+    @ViewChild('rawCharacteristicsJson', { static: true })
+    public rawCharJson!: TemplateRef<any>;
+    @ViewChild('refinement', { static: true })
+    public refinement!: TemplateRef<any>;
+    @ViewChild('refinementJson', { static: true })
+    public refinementJson!: TemplateRef<any>;
+    utility: any;
+
+    selectedList!: string;
     charactersiticsForm!: FormGroup;
+    refinementForm!: FormGroup;
     apiReponse;
     convertedJson;
     convertedJsonArray;
@@ -31,7 +53,12 @@ export class CharacteristicViewComponent implements OnInit {
         private dataService: DataService
     ) {}
 
+    ngAfterViewInit(): void {
+        this.determineTemplate();
+    }
+
     ngOnInit(): void {
+        //debugger;
         this.charactersiticsForm = this.fb.group({
             schemaVersion: [''],
             name: [''],
@@ -42,28 +69,30 @@ export class CharacteristicViewComponent implements OnInit {
             validations: this.fb.array([]),
             refinements: this.fb.array([])
         });
+
+        this.refinementForm = this.fb.group({
+            refinements: this.fb.array([])
+        });
+
         const { name, fileVersionId } = this.currentCharacteristic;
         this.apiService
             .getCharacteristicsDetails(name, fileVersionId, true)
             .subscribe((response) => {
-                //console.log(JSON.stringify(response));
                 this.apiReponse = response;
                 this.fileContent = this.apiReponse;
                 const { result } = this.apiReponse;
-                //const { Validations } = this.apiReponse;
+                this.jsonContent = JSON.stringify(result, undefined, 4);
                 const { fileContent } = result;
-                //console.log(`api validation ${JSON.stringify(validations)}`);
                 const parsedJson = JSON.parse(fileContent);
                 const json = JSON.stringify(parsedJson, undefined, 4);
-                this.jsonContent = json;
-                console.log(`file content ${fileContent}`);
-                const { schemaVersion, name, dataType, validations } = result;
-                // const { validValues } = validations[0];
-                //const Validations = result['validations'];
-                //console.log(`api validation ${JSON.stringify(validValues)}`);
-                //const descriptionText = JSON.stringify(Description);
-                //console.log(`file content ${JSON.parse(json)}`);
-                //this.convertContentToJson();
+                const {
+                    schemaVersion,
+                    name,
+                    dataType,
+                    validations,
+                    refinements
+                } = result;
+
                 this.charactersiticsForm.patchValue({
                     schemaVersion: schemaVersion,
                     name: name,
@@ -73,12 +102,52 @@ export class CharacteristicViewComponent implements OnInit {
                     this.setValidations(validations);
                 }
 
+                if (refinements) {
+                    this.setRefinements(refinements);
+                }
+
+                this.isValuesExist();
+
                 console.log(
                     `form values ${JSON.stringify(
                         this.charactersiticsForm.value
                     )}`
                 );
             });
+    }
+
+    determineTemplate() {
+        this.container.clear();
+        switch (this.utility) {
+            case 'rawCharacteristics': {
+                this.container.createEmbeddedView(this.rawChar);
+                break;
+            }
+            case 'rawCharacteristicsJson': {
+                this.container.createEmbeddedView(this.rawCharJson);
+                break;
+            }
+            case 'refinement': {
+                this.container.createEmbeddedView(this.refinement);
+                break;
+            }
+            case 'refinementJson': {
+                this.container.createEmbeddedView(this.refinementJson);
+                break;
+            }
+            default: {
+                this.container.createEmbeddedView(this.rawChar);
+                break;
+            }
+        }
+    }
+
+    setTemplate(val: string) {
+        // debugger;
+        this.selectedList = val;
+        this.utility =
+            CommonConstants.listOfCharacteristicsView[this.selectedList];
+        this.determineTemplate();
     }
 
     getValidValuesArray(validValuesGroup: AbstractControl): FormArray {
@@ -99,23 +168,39 @@ export class CharacteristicViewComponent implements OnInit {
         });
     }
 
-    addValidations(validationInput: Validation): void {
+    addRefinementFormGroup(refinement: Refinement): FormGroup {
+        return this.fb.group({
+            schemaVersion: refinement.schemaVersion,
+            name: refinement.name,
+            refinementType: refinement.refinementType,
+            expression: refinement.expression,
+            priority: refinement.priority,
+            requiredCharacteristics: this.fb.array([])
+        });
+    }
+
+    addRefinements(refinementInput: Refinement): void {
+        const refinement = this.addRefinementFormGroup(refinementInput);
+        (<FormArray>this.refinementForm.get('refinements')).push(refinement);
+        console.log(`the validation Array ${refinement}`);
+    }
+
+    addValidations(validationInput: Validation): FormGroup {
         const validation = this.addValidationFormGroup(validationInput);
         (<FormArray>this.charactersiticsForm.get('validations')).push(
             validation
         );
         console.log(`the validation Array ${validation}`);
+        return validation;
     }
 
-    addValidValues(fieldGroup: AbstractControl, validVal: string): void {
-        const validValuesArray = fieldGroup.get('validValues') as FormArray;
-        console.log(`valid values ${validValuesArray}`);
-        console.log(`field group ${fieldGroup}`);
+    addValidValues(validValuesArray: FormArray, validVal: string): void {
         const value = this.addValidValuesControl(validVal);
         validValuesArray.push(value);
     }
 
     addValidValuesControl(value) {
+        console.log(`value in add ${value}`);
         return new FormControl(value);
     }
 
@@ -123,32 +208,56 @@ export class CharacteristicViewComponent implements OnInit {
         return this.charactersiticsForm.get('validations') as FormArray;
     }
 
-    setValidations(validations: Validation[]): void {
-        //const formArray = new FormArray([]);
-        validations.forEach((validation) => {
-            const { validValues } = validation;
-            if (validValues) {
-                this.setValidValues(validValues);
-            }
+    getRefinements(): FormArray {
+        return this.refinementForm.get('refinements') as FormArray;
+    }
 
-            console.log(`valid value in set ${JSON.stringify(validValues)}`);
-            this.addValidations(validation);
+    setRefinements(refinements: Refinement[]): void {
+        refinements.forEach((refinement) => {
+            console.log(`refinements ${JSON.stringify(refinements)}`);
+            this.addRefinements(refinement);
         });
     }
 
-    setValidValues(validValues: string[]) {
-        const validationsArray = this.getValidations() as FormArray;
+    setValidations(validations: Validation[]): void {
+        validations.forEach((validation) => {
+            const { validValues } = validation;
+
+            console.log(`valid value in set ${JSON.stringify(validValues)}`);
+            const validationformGroup = this.addValidations(validation);
+            if (validValues) {
+                this.setValidValues(validationformGroup, validValues);
+            }
+        });
+    }
+
+    setValidValues(validationformGroup: FormGroup, validValues: string[]) {
+        const validValuesArray = validationformGroup.get(
+            'validValues'
+        ) as FormArray;
         console.log(
-            `validation array controls ${validationsArray.controls.values}`
+            `validation array controls ${validValuesArray.controls.values}`
         );
-        //const validValuesArray = this.getValidValuesArray(validationsArray);
         validValues.forEach((val) => {
-            this.addValidValues(validationsArray, val);
+            this.addValidValues(validValuesArray, val);
         });
     }
 
     isValidationsExists(): number {
         return this.getValidations().controls.length;
+    }
+    isRefinementsExists(): number {
+        return this.getRefinements().controls.length;
+    }
+
+    isValuesExist() {
+        const validationFormGroup = this.getValidations();
+        const validValuesArray = validationFormGroup.get(
+            'validValues'
+        ) as FormArray;
+        console.log(`valid values length ${validValuesArray}`);
+        //return validValuesArray.controls.length;
+        return 1;
     }
 
     updateAllComplete() {

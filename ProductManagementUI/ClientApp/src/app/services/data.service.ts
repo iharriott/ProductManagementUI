@@ -24,14 +24,10 @@ export class DataService {
     loggedInUser!: string;
     mode!: string;
     revisionSelectedTabIndex: number = 0;
-
-    lob!: string;
-
     characteristicsList: any[] = [];
     productSearchData!: ProductSearch;
     searchedProduct!: string;
     selectProductCharacteristics!: any;
-
 
     getLoggedInUser() {
         return window.localStorage.getItem('userName');

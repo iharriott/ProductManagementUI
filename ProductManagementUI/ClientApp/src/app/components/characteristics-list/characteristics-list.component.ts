@@ -106,7 +106,6 @@ export class CharacteristicsListComponent implements OnInit {
     viewCharacteristics(row) {}
 
     onChange(event, row) {
-        //debugger;
         const { name, fileVersionId } = row;
         const data = { name, fileVersionId };
         if (

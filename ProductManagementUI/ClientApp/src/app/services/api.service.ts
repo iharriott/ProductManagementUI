@@ -7,16 +7,11 @@ import { RateRevisions } from '../components/interfaces/rate-revisions';
 import { DataService } from './data.service';
 import { RatingChanges } from '../components/interfaces/rating-changes';
 import { CharacteristicsDefinition } from '../components/interfaces/characteristicsDefinition';
-import {
-    CharacteristicDetail,
-    CharacteristicsRoot
-} from '../components/interfaces/characteristic-detail';
+import { CharacteristicsRoot } from '../components/interfaces/characteristic-detail';
 import { BaseTableResponse } from '../components/interfaces/BaseTableResponse';
-
 
 import { ProductSearch } from '../components/interfaces/product-search';
 import { ProductDefinitionDetail } from '../components/interfaces/product-definition-detail';
-
 
 @Injectable({
     providedIn: 'root'
@@ -55,7 +50,6 @@ export class ApiService {
         this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}?includeContent=${includeContent}`;
         return this.http.get<RatingChanges>(this.endpoint);
     }
-
 
     GetProductsInFamilyAndState(
         inputData: ProductSearch
@@ -100,7 +94,6 @@ export class ApiService {
         this.endpoint = `${this.baseUrl}/${apiAction}/${productDefinition}?includeRefinement=${includeRefinement}&includeRefinement=${includeValidation}`;
         return this.http.get<CharacteristicsDefinition>(this.endpoint);
     }
-
 
     updateRatingFile(
         fileName: string,
@@ -151,8 +144,7 @@ export class ApiService {
         this.endpoint = `${this.baseUrl}/${apiAction}/${fileName}/${fileVersionId}`;
         return this.http.get<FactorFileContent>(this.endpoint);
     }
-    
-    
+
     getComopany(): Observable<BaseTableResponse> {
         const apiAction = 'GetCompanies';
         this.endpoint = `${this.baseUrl}/${apiAction}`;
@@ -176,5 +168,4 @@ export class ApiService {
         this.endpoint = `${this.baseUrl}/${apiAction}`;
         return this.http.get<BaseTableResponse>(this.endpoint);
     }
-        
 }
