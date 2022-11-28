@@ -1,4 +1,4 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +18,14 @@ import {
 import { environment } from '../environments/environment';
 import { Configuration } from 'msal';
 import { AuthOptions, CacheOptions } from 'msal/lib-commonjs/Configuration';
+import { ConfigurationService } from './configuration/configuration.service';
+
+const appInitializerFn = (appConfig: ConfigurationService) => {
+    return () => {
+      return appConfig.loadConfig();      
+    };    
+  };
+
 const isIE =
     window.navigator.userAgent.indexOf('MSIE') > -1 ||
     window.navigator.userAgent.indexOf('Trodemt') > -1;
@@ -97,6 +105,13 @@ function MSALAngularConfigFactory(): MsalAngularConfiguration {
     ],
     schemas: [NO_ERRORS_SCHEMA],
     providers: [
+        ConfigurationService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appInitializerFn,
+            multi: true,
+            deps: [ConfigurationService]
+        },
         {
             provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
             useValue: { duration: 2500 }

@@ -25,7 +25,8 @@ namespace ProductManagementUI.Controllers
                 { "ClientId", _configuration["ClientId"] },                
                 { "Authority", _configuration["Authority"] },
                 { "RedirectUrl", _configuration["RedirectUrl"] },
-                { "PostLogoutUrl", _configuration["PostLogoutUrl"] }
+                { "PostLogoutUrl", _configuration["PostLogoutUrl"] },
+                { "ApiScope", _configuration["ApiScope"] }
             };
         }
     }
