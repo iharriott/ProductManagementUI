@@ -5,13 +5,12 @@
 export const environment = {
     production: false,
     gitApiBaseUrl: 'https://pdmapi.dv1.apstks.aks.aze1.cloud.geico.net',
-    azureadClientid: 'eaffd59c-cc2d-4570-892a-7630be7c0a62',
-    azureadTenantid: '7389d8c0-3607-465c-a69f-7d4426502912',
     postLogoutUrl: 'http://localhost:4200',
-    redirectUrl: 'http://localhost:4200'
+    redirectUrl: 'http://localhost:4200',      
+    uiBaseUrl: 'https://localhost:7260'
 };
 
-/*
+/*  
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *

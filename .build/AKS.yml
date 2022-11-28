@@ -49,7 +49,7 @@ jobs:
     inputs:
       workingDir: '${{variables.workingDirectory}}'
       command: custom
-      customCommand: run build
+      customCommand: run build-prod
 
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'

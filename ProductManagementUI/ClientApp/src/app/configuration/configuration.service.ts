@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Utils } from '../constants/utils';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ConfigurationService {
@@ -9,11 +9,11 @@ export class ConfigurationService {
   constructor(private http: HttpClient) { }
 
   loadConfig() {
-    return this.http.get<IServerConfiguration>(Utils.getBaseUrl() + 'configuration')
+    return this.http.get<IServerConfiguration>(environment.uiBaseUrl + '/configuration')
       .subscribe(
         result => { this.configuration = <IServerConfiguration>(result); 
-            console.log('Clinet id' + this.configuration.ClientId);
-            console.log('ProductMgmtAPIBaseURL' + this.configuration.ProductMgmtAPIBaseURL);},
+            console.log('Clinet id -' + result.ClientId);
+            console.log('ProductMgmtAPIBaseURL - ' + result.ProductMgmtAPIBaseURL);},
         error => console.log(error));
   }
 

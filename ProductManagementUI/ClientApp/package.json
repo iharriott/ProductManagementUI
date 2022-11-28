@@ -13,7 +13,8 @@
         "test": "jest",
         "test:coverage": "jest --coverage",
         "test:watch": "jest --watch",
-        "lint": "ng lint --fix"
+        "lint": "ng lint --fix",
+        "build-prod": "ng build --configuration production"
     },
     "private": true,
     "dependencies": {
