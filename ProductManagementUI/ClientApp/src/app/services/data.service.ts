@@ -28,6 +28,7 @@ export class DataService {
     productSearchData!: ProductSearch;
     searchedProduct!: string;
     selectProductCharacteristics!: any;
+    currentCharacteristic!: any;
 
     getLoggedInUser() {
         return window.localStorage.getItem('userName');
@@ -60,6 +61,10 @@ export class DataService {
         return moment(date, 'YYYY-MM-DDTHH:mm')
             .format('YYYY-MM-DDTHH:mm')
             .toString();
+    }
+
+    getDateFromUTCShort(date: Date): string {
+        return moment(date, 'YYYY-MM-DDTHH:mm').format('YYYY-MM-DD').toString();
     }
 
     getFilename(file: string): string {

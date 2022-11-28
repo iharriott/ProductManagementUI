@@ -42,15 +42,17 @@ export class StateFilingComponent implements OnInit {
                     this.dataSource = result.map((val) => {
                         return {
                             Identifier: val.productDefinition,
-                            NewBusinessDate: this.dataService.getDateFromUTC(
-                                val.newBusinessDate
-                            ),
-                            RenewalDate: this.dataService.getDateFromUTC(
+                            NewBusinessDate:
+                                this.dataService.getDateFromUTCShort(
+                                    val.newBusinessDate
+                                ),
+                            RenewalDate: this.dataService.getDateFromUTCShort(
                                 val.renewalDate
                             ),
-                            AvailabilityDate: this.dataService.getDateFromUTC(
-                                val.availabilityDate
-                            ),
+                            AvailabilityDate:
+                                this.dataService.getDateFromUTCShort(
+                                    val.availabilityDate
+                                ),
                             BI: val.bi,
                             PD: val.pd,
                             Comp: val.comp
@@ -58,9 +60,6 @@ export class StateFilingComponent implements OnInit {
                     });
                     console.log(JSON.stringify(this.dataSource));
                     this.tableData$.next(this.dataSource);
-                    // this.displayColumns = this.dataService.getColumnHeadings(
-                    //     this.dataSource
-                    // );
                     console.log(JSON.stringify(this.displayColumns));
                 },
                 (error) => {
@@ -71,7 +70,6 @@ export class StateFilingComponent implements OnInit {
     }
 
     goToProducts(event) {
-        console.log(event);
         this.dataService.selectProductCharacteristics = event;
         this.router.navigate(['characteristicslist']);
     }

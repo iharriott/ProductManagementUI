@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProductDefinitionComponent } from '../app/components/product-definition/product-definition.component';
 import { CappingRuleComponent } from './components/capping-rule/capping-rule.component';
+import { CharacteristicViewComponent } from './components/characteristic-view/characteristic-view.component';
 import { CharacteristicsListComponent } from './components/characteristics-list/characteristics-list.component';
 import { CharacteristicsMultiViewComponent } from './components/characteristics-multi-view/characteristics-multi-view.component';
 import { CharacteristicsComponent } from './components/characteristics/characteristics.component';
@@ -20,14 +21,11 @@ import { ProductionDefinitionSearchResultsComponent } from './components/product
 import { RateRevisionComponent } from './components/rate-revision/rate-revision.component';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { StateFilingComponent } from './components/state-filing/state-filing.component';
-//import { MsalGuard } from '@azure/msal-angular';
 
 const routes: Routes = [
     {
         path: '',
         component: HomeComponent,
-        // redirectTo: 'home',
-        // pathMatch: 'full',
         children: [
             {
                 path: 'dashboard',
@@ -103,6 +101,11 @@ const routes: Routes = [
                 path: 'statefiling',
                 component: StateFilingComponent,
                 data: { view: 'statefiling' }
+            },
+            {
+                path: 'characteristicdetail',
+                component: CharacteristicViewComponent,
+                data: { view: 'characteristicdetail' }
             }
         ]
     },
@@ -115,18 +118,12 @@ const routes: Routes = [
         path: 'editfile/:fileHistoryId/:fileName/:fileId',
         component: FileUploadComponent,
         data: { view: 'edit' }
-        // canActivate: [MsalGuard]
     },
     {
         path: 'addNewfile',
         component: FileUploadComponent,
         data: { view: 'add' }
     },
-    // {
-    //     path: 'viewfile/:fileHistoryId/:fileName',
-    //     component: FileUploadComponent,
-    //     data: { view: 'view' }
-    // },
     {
         path: 'capping',
         component: CappingRuleComponent,
@@ -152,64 +149,10 @@ const routes: Routes = [
         component: DataEditorListComponent,
         data: { view: 'datalist' }
     },
-    // {
-    //     path: 'viewfilelist',
-    //     component: FileListComponent,
-    //     data: { view: 'view' }
-    // },
-    // {
-    //     path: 'editfilelist',
-    //     component: FileListComponent,
-    //     data: { view: 'edit' }
-    // },
-    // {
-    //     path: 'dashboard',
-    //     component: DashboardComponent,
-    //     data: { view: 'dashboard' }
-    // },
-    // {
-    //     path: 'home',
-    //     component: HomeComponent,
-    //     data: { view: 'home' }
-    // },
-    // {
-    //     path: 'multiedit',
-    //     component: MultiEditComponent,
-    //     data: { view: 'edit' }
-    // },
-    // {
-    //     path: 'multiview',
-    //     component: MultiEditComponent,
-    //     data: { view: 'view' }
-    // },
-    // {
-    //     path: 'filehistory/:filePath',
-    //     component: FileHistoryListComponent,
-    //     data: { view: 'filehistory' }
-    // },
-    // {
-    //     path: 'revision',
-    //     component: RateRevisionComponent,
-    //     data: { view: 'revision' }
-    // },
-    // {
-    //     path: 'multirevision',
-    //     component: MultiRevisionViewComponent,
-    //     data: { view: 'multirevision' }
-    // },
+
     {
         path: 'sideNav',
         component: SideNavigationComponent,
-        // children: [
-        //     {
-        //         path: 'dashboard',
-        //         component: DashboardComponent
-        //     },
-        //     {
-        //         path: 'revision',
-        //         component: RateRevisionComponent
-        //     }
-        // ],
         data: { view: 'multirevision' }
     }
 ];

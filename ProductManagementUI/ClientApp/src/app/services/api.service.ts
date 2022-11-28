@@ -74,7 +74,6 @@ export class ApiService {
         includeContent: boolean
     ): Observable<CharacteristicsRoot> {
         const apiAction = 'GetCharacteristics';
-        // this.endpoint = `${this.baseUrl}/${apiAction}/${characteristic}?fileVersionId=${fileVersionId}?includeContent=${includeContent}`;
         this.endpoint = `${this.baseUrl}/${apiAction}/${characteristic}?includeContent=${includeContent}`;
         return this.http.get<CharacteristicsRoot>(this.endpoint);
     }

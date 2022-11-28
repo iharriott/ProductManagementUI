@@ -1,276 +1,467 @@
 <form [formGroup]="productDefinitionForm">
-<mat-card>
-<mat-card-header>
- <mat-card-title>
-	<h1 style="color: #004a9f">
-		Product Definition Form
-	</h1>
-</mat-card-title>
-</mat-card-header>
-<mat-card-content>
-
-    <div class="row">
-        <div class="col-sm-4">
-            <mat-form-field class="example-full-width" appearance="standard">
-                <mat-label>Schema Version</mat-label>
-                <input formControlName="schemaVersion" matInput  placeholder="SchemaVersion" value="">
-            </mat-form-field>
-        </div>
-        <div class="col-sm-4">
-            <mat-form-field appearance="standard">
-                <mat-label>Line of Business</mat-label>
-                <mat-select formControlName="lineOfBusiness">
-                  <mat-option *ngFor="let business of businesses" [value]="business.value">
-                    {{business.viewValue}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-        </div>
-        <div class="col-sm-4">
-            <mat-form-field appearance="standard">
-                <mat-label>State</mat-label>
-                <mat-select formControlName="state">
-                  <mat-option *ngFor="let state of states" [value]="state.value">
-                    {{state.viewValue}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-        </div>
-        
-    </div>
-
- <div class="row">
-    <div class="col-sm-4">
-        <mat-form-field class="example-full-width" appearance="standard">
-            <mat-label>Product Name</mat-label>
-            <input formControlName="productName" matInput  placeholder="ProductName" value="">
-        </mat-form-field>
-    </div>
-    <div class="col-sm-4">
-        <mat-form-field class="example-full-width" appearance="standard">
-            <mat-label>Product Version</mat-label>
-            <input formControlName="productVersion" matInput  placeholder="ProductVersion" value="">
-        </mat-form-field>
-    </div>
-   
-</div>
-<div class="row">
-	<div class="col-sm-4">
-		
-		<mat-form-field  appearance="standard">
-			<mat-label>Effective Date</mat-label>
-			<input matInput [matDatepicker]="pickerEffective" formControlName="effectiveDate" >
-			<mat-hint>MM/DD/YYYY</mat-hint>
-			<mat-datepicker-toggle matSuffix [for]="pickerEffective"></mat-datepicker-toggle>
-			<mat-datepicker #pickerEffective></mat-datepicker>
-		  </mat-form-field>
-	</div>
-	<div class="col-sm-4">
-		<mat-form-field  appearance="standard">
-			<mat-label>Expiry Date</mat-label>
-			<input matInput [matDatepicker]="pickerExpiry" formControlName ="expiryDate" >
-			<mat-hint>MM/DD/YYYY</mat-hint>
-			<mat-datepicker-toggle matSuffix [for]="pickerExpiry"></mat-datepicker-toggle>
-			<mat-datepicker #pickerExpiry></mat-datepicker>
-		  </mat-form-field>
-	</div>
-</div>
-
-<div class="well">
-    <button
-    mat-raised-button color="primary"
-    (click)="addEntity()"
-    matTooltip="Add a new entity"
-    >
-     <!-- <mat-icon>add</mat-icon>   -->
-     Add Entity
-    </button>&nbsp;&nbsp; 
-    <br><br>
-	
-<div *ngIf="isEntitiesExists() > 0" formArrayName="entities" class="mat-elevation-z2 form-group" >
- <div *ngFor="let entity of getEntities()?.controls; let i = index" [formGroupName] ="i">
-	<div class="row">
-		<div class="col-sm-2">
-			<legend>Entity {{i + 1}}</legend> 
-		</div>
-		<div class="col-sm-2">
-			<button
-			mat-raised-button color="accent" 
-			(click)="removeEntity(i)"
-		>
-		Delete
-   		</button>
-		</div>
-	</div>
-	
-	
-    <div class="row">
-        <div class="col-sm-3">
-            <mat-form-field class="example-full-width" appearance="standard">
-                <mat-label>Entity Type</mat-label>
-                <input formControlName="entityType" matInput  placeholder="EntityType" value="">
-            </mat-form-field>
-        </div>
-        <div class="col-sm-3">
-            <mat-form-field class="example-full-width" appearance="standard">
-                <mat-label>Description</mat-label>
-                <input formControlName="description" matInput  placeholder="description" value="">
-            </mat-form-field>
-        </div>
-        <div class="col-sm-2">
-            <mat-form-field class="example-full-width" appearance="standard">
-                <mat-label>Cardinality</mat-label>
-                <input formControlName="cardinality" matInput  placeholder="cardinality" value="">
-            </mat-form-field>
-         </div>  
-         <div class="col-sm-2">
-            <mat-form-field class="example-full-width" appearance="standard">
-                <mat-label>Coverages</mat-label>
-                <input formControlName="coverages" matInput  placeholder="coverages" value="">
-            </mat-form-field>
-         </div> 
-    </div>
-    <div class="well">
-    <button
-    mat-raised-button color="primary" 
-    (click)="addFields(entity)"
-    matTooltip="Add a new field"
-    >
-    <!-- <mat-icon>add</mat-icon>  -->
-    Add Field
-    </button>&nbsp;&nbsp; 
-    <br><br>
-
-    <div *ngIf="isFieldsExists(entity) > 0" formArrayName="fields" class="form-group" >
-        <div *ngFor="let field of getFieldsArray(entity)?.controls; let j = index" [formGroupName] ="j">
-			<div class="row">
-				<div class="col-sm-2">
-                  <legend> Field {{j + 1}}</legend>
-				</div>
-				<div class="col-sm-2">
-
-					<button
-					mat-raised-button color="accent" 
-					(click)="removeFields(entity,j, 'fields')"
-					>
-					Delete
-				   </button> 
-				</div>
-			</div>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <h1 style="color: #004a9f">Product Definition Form</h1>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
             <div class="row">
-               <div class="col-sm-3">
-                   <mat-form-field class="example-full-width" appearance="standard">
-                       <mat-label>Name</mat-label>
-                       <input formControlName="name" matInput  placeholder="Name" value="">
-                   </mat-form-field>
-                </div> 
-   
-                <div class="col-sm-3">
-                   <mat-form-field appearance="standard">
-                       <mat-label>DataType</mat-label>
-                       <mat-select formControlName="dataType">
-                         <mat-option *ngFor="let datatype of dataTypes" [value]="datatype.value">
-                           {{datatype.viewValue}}
-                         </mat-option>
-                       </mat-select>
-                     </mat-form-field>
-               </div>
-               <div class="col-sm-3">
-   
-                   <mat-slide-toggle   formControlName ="isRequired" >IsRequired</mat-slide-toggle> 
-   
-               </div>
-   
-            </div>
-   
-            <div class="well">
-            <button
-            mat-raised-button color="primary" 
-            (click)="addValidations(field)"
-            matTooltip="Add a new validation"
-            >
-            <!-- <mat-icon>add</mat-icon>  -->
-            Add Validation
-            </button>&nbsp;&nbsp; 
-            <br><br>
-
-            <div *ngIf="isValidationsExists(field) > 0" formArrayName="validations" class="form-group">
-                <div *ngFor="let validation of getValidationsArray(field)?.controls; let k = index" [formGroupName] ="k">
-					<div class="row">
-						<div class="col-sm-3">
-                         <legend>Validation {{ k + 1}}</legend>
-						</div>
-						<div class="col-sm-2">
-							<button
-							mat-raised-button color="accent" 
-							(click)="removeValidations(field,k)"
-							>
-							<!-- <mat-icon>delete</mat-icon> -->
-							Delete
-						   </button> 
-						</div>
-					</div>
-                  <div class="row">
-                      <div class="col-sm-3">
-                          <mat-form-field class="example-full-width" appearance="standard">
-                              <mat-label>Name</mat-label>
-                              <input formControlName="name" matInput  placeholder="Name" value="">
-                          </mat-form-field>
-                       </div> 
-          
-                       <div class="col-sm-3">
-                          <mat-form-field appearance="standard">
-                              <mat-label>ValidationType</mat-label>
-                              <mat-select formControlName="validationType">
-                                <mat-option *ngFor="let validationtype of validationTypes" [value]="validationtype.value">
-                                  {{validationtype.viewValue}}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                      </div>
-                   </div>
-
-                   <div class="well">
-					<button
-					mat-raised-button color="primary" 
-					(click)="addValidValues(validation)"
-					matTooltip="Add a new Value"
-					>
-					<!-- <mat-icon>add</mat-icon>  -->
-					Add Values
-					</button>&nbsp;&nbsp; 
-					<br><br>
-                   <div *ngIf="isValuesExist(validation) > 0" formArrayName="validValues" class="form-group">
-						<div *ngFor="let value of getValidValuesArray(validation)?.controls; let m = index"   >
-                         <div class="row">
-							<div class="col-sm-3">
-								<mat-form-field class="example-full-width" appearance="standard">
-									<mat-label>Value</mat-label>
-									<input  matInput  placeholder="Value" value="">
-								</mat-form-field>
-							 </div> 
-							 <button
-							 mat-raised-button color="accent" 
-							 (click)="removeValidValues(validation,m)"
-							 >
-				
-							 Delete
-							</button> 
-							&nbsp;&nbsp; 
-						 </div>
-						</div>
-                   </div>
-                   </div>
+                <div class="col-sm-4">
+                    <mat-form-field
+                        class="example-full-width"
+                        appearance="standard"
+                    >
+                        <mat-label>Schema Version</mat-label>
+                        <input
+                            formControlName="schemaVersion"
+                            matInput
+                            placeholder="SchemaVersion"
+                            value=""
+                        />
+                    </mat-form-field>
                 </div>
-              </div> 
+                <div class="col-sm-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Line of Business</mat-label>
+                        <mat-select formControlName="lineOfBusiness">
+                            <mat-option
+                                *ngFor="let business of businesses"
+                                [value]="business.value"
+                            >
+                                {{ business.viewValue }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>State</mat-label>
+                        <mat-select formControlName="state">
+                            <mat-option
+                                *ngFor="let state of states"
+                                [value]="state.value"
+                            >
+                                {{ state.viewValue }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
-        </div>
-       </div>
 
-    </div>
- </div>
- </div>
-</div>
-</mat-card-content>
-</mat-card>
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field
+                        class="example-full-width"
+                        appearance="standard"
+                    >
+                        <mat-label>Product Name</mat-label>
+                        <input
+                            formControlName="productName"
+                            matInput
+                            placeholder="ProductName"
+                            value=""
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field
+                        class="example-full-width"
+                        appearance="standard"
+                    >
+                        <mat-label>Product Version</mat-label>
+                        <input
+                            formControlName="productVersion"
+                            matInput
+                            placeholder="ProductVersion"
+                            value=""
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Effective Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="pickerEffective"
+                            formControlName="effectiveDate"
+                        />
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="pickerEffective"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEffective></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Expiry Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="pickerExpiry"
+                            formControlName="expiryDate"
+                        />
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="pickerExpiry"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #pickerExpiry></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="well">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="addEntity()"
+                    matTooltip="Add a new entity"
+                >
+                    Add Entity</button
+                >&nbsp;&nbsp; <br /><br />
+
+                <div
+                    *ngIf="isEntitiesExists() > 0"
+                    formArrayName="entities"
+                    class="mat-elevation-z2 form-group"
+                >
+                    <div
+                        *ngFor="
+                            let entity of getEntities()?.controls;
+                            let i = index
+                        "
+                        [formGroupName]="i"
+                    >
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <legend>Entity {{ i + 1 }}</legend>
+                            </div>
+                            <div class="col-sm-2">
+                                <button
+                                    mat-raised-button
+                                    color="accent"
+                                    (click)="removeEntity(i)"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <mat-form-field
+                                    class="example-full-width"
+                                    appearance="standard"
+                                >
+                                    <mat-label>Entity Type</mat-label>
+                                    <input
+                                        formControlName="entityType"
+                                        matInput
+                                        placeholder="EntityType"
+                                        value=""
+                                    />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field
+                                    class="example-full-width"
+                                    appearance="standard"
+                                >
+                                    <mat-label>Description</mat-label>
+                                    <input
+                                        formControlName="description"
+                                        matInput
+                                        placeholder="description"
+                                        value=""
+                                    />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-2">
+                                <mat-form-field
+                                    class="example-full-width"
+                                    appearance="standard"
+                                >
+                                    <mat-label>Cardinality</mat-label>
+                                    <input
+                                        formControlName="cardinality"
+                                        matInput
+                                        placeholder="cardinality"
+                                        value=""
+                                    />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-2">
+                                <mat-form-field
+                                    class="example-full-width"
+                                    appearance="standard"
+                                >
+                                    <mat-label>Coverages</mat-label>
+                                    <input
+                                        formControlName="coverages"
+                                        matInput
+                                        placeholder="coverages"
+                                        value=""
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="addFields(entity)"
+                                matTooltip="Add a new field"
+                            >
+                                Add Field</button
+                            >&nbsp;&nbsp; <br /><br />
+
+                            <div
+                                *ngIf="isFieldsExists(entity) > 0"
+                                formArrayName="fields"
+                                class="form-group"
+                            >
+                                <div
+                                    *ngFor="
+                                        let field of getFieldsArray(entity)
+                                            ?.controls;
+                                        let j = index
+                                    "
+                                    [formGroupName]="j"
+                                >
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <legend>Field {{ j + 1 }}</legend>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button
+                                                mat-raised-button
+                                                color="accent"
+                                                (click)="
+                                                    removeFields(
+                                                        entity,
+                                                        j,
+                                                        'fields'
+                                                    )
+                                                "
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <mat-form-field
+                                                class="example-full-width"
+                                                appearance="standard"
+                                            >
+                                                <mat-label>Name</mat-label>
+                                                <input
+                                                    formControlName="name"
+                                                    matInput
+                                                    placeholder="Name"
+                                                    value=""
+                                                />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <mat-form-field
+                                                appearance="standard"
+                                            >
+                                                <mat-label>DataType</mat-label>
+                                                <mat-select
+                                                    formControlName="dataType"
+                                                >
+                                                    <mat-option
+                                                        *ngFor="
+                                                            let datatype of dataTypes
+                                                        "
+                                                        [value]="datatype.value"
+                                                    >
+                                                        {{ datatype.viewValue }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <mat-slide-toggle
+                                                formControlName="isRequired"
+                                                >IsRequired</mat-slide-toggle
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div class="well">
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            (click)="addValidations(field)"
+                                            matTooltip="Add a new validation"
+                                        >
+                                            Add Validation</button
+                                        >&nbsp;&nbsp; <br /><br />
+
+                                        <div
+                                            *ngIf="
+                                                isValidationsExists(field) > 0
+                                            "
+                                            formArrayName="validations"
+                                            class="form-group"
+                                        >
+                                            <div
+                                                *ngFor="
+                                                    let validation of getValidationsArray(
+                                                        field
+                                                    )?.controls;
+                                                    let k = index
+                                                "
+                                                [formGroupName]="k"
+                                            >
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <legend>
+                                                            Validation
+                                                            {{ k + 1 }}
+                                                        </legend>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button
+                                                            mat-raised-button
+                                                            color="accent"
+                                                            (click)="
+                                                                removeValidations(
+                                                                    field,
+                                                                    k
+                                                                )
+                                                            "
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <mat-form-field
+                                                            class="example-full-width"
+                                                            appearance="standard"
+                                                        >
+                                                            <mat-label
+                                                                >Name</mat-label
+                                                            >
+                                                            <input
+                                                                formControlName="name"
+                                                                matInput
+                                                                placeholder="Name"
+                                                                value=""
+                                                            />
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-sm-3">
+                                                        <mat-form-field
+                                                            appearance="standard"
+                                                        >
+                                                            <mat-label
+                                                                >ValidationType</mat-label
+                                                            >
+                                                            <mat-select
+                                                                formControlName="validationType"
+                                                            >
+                                                                <mat-option
+                                                                    *ngFor="
+                                                                        let validationtype of validationTypes
+                                                                    "
+                                                                    [value]="
+                                                                        validationtype.value
+                                                                    "
+                                                                >
+                                                                    {{
+                                                                        validationtype.viewValue
+                                                                    }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+
+                                                <div class="well">
+                                                    <button
+                                                        mat-raised-button
+                                                        color="primary"
+                                                        (click)="
+                                                            addValidValues(
+                                                                validation
+                                                            )
+                                                        "
+                                                        matTooltip="Add a new Value"
+                                                    >
+                                                        Add Values</button
+                                                    >&nbsp;&nbsp; <br /><br />
+                                                    <div
+                                                        *ngIf="
+                                                            isValuesExist(
+                                                                validation
+                                                            ) > 0
+                                                        "
+                                                        formArrayName="validValues"
+                                                        class="form-group"
+                                                    >
+                                                        <div
+                                                            *ngFor="
+                                                                let value of getValidValuesArray(
+                                                                    validation
+                                                                )?.controls;
+                                                                let m = index
+                                                            "
+                                                        >
+                                                            <div class="row">
+                                                                <div
+                                                                    class="col-sm-3"
+                                                                >
+                                                                    <mat-form-field
+                                                                        class="example-full-width"
+                                                                        appearance="standard"
+                                                                    >
+                                                                        <mat-label
+                                                                            >Value</mat-label
+                                                                        >
+                                                                        <input
+                                                                            matInput
+                                                                            placeholder="Value"
+                                                                            value=""
+                                                                        />
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <button
+                                                                    mat-raised-button
+                                                                    color="accent"
+                                                                    (click)="
+                                                                        removeValidValues(
+                                                                            validation,
+                                                                            m
+                                                                        )
+                                                                    "
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                                &nbsp;&nbsp;
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </form>

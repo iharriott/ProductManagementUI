@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
@@ -30,7 +30,6 @@ export class DashboardComponent {
     }
 
     viewCharacteristics() {
-        // this.router.navigate(['characteristicslist']);
         this.router.navigate(['productsearch']);
     }
 }

@@ -53,26 +53,7 @@ export class DataViewerComponent implements OnInit {
 
     constructor(private apiService: ApiService) {}
 
-    ngOnInit(): void {
-        // const url = CommonConstants.cappingLevelV2;
-        // this.dataSource = new MatTableDataSource();
-        // this.apiService.getAllData(url).subscribe((data) => {
-        //     this.dataSource.data = data.map((val) => {
-        //         return {
-        //             name: val.name,
-        //             version: val.version,
-        //             createdBy: val.createdBy,
-        //             createdDate: val.createdDate,
-        //             approvedBy: val.approvedBy,
-        //             approvedDate: val.approvedDate,
-        //             data: val.data,
-        //             state: val.state,
-        //             isExpanded: false
-        //         };
-        //     });
-        //     console.log(`expansion data ${this.dataSource.data}`);
-        // });
-    }
+    ngOnInit(): void {}
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;

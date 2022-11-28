@@ -200,3 +200,15 @@ tr.data-element-row:not(.data-expanded-row):active {
     max-width: '300px';
     margin-right: 10px;
 }
+
+.link-button {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: rgb(51, 24, 207);
+    text-decoration: underline;
+    cursor: pointer;
+}

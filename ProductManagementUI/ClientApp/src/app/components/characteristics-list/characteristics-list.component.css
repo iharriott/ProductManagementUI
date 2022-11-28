@@ -1,11 +1,8 @@
 .select2 {
     margin-top: 10px;
     margin-left: 0px;
-    /* color: #1c1c1e; */
     font-style: normal;
     font-weight: 400;
-    /* font-size: 16px;  */
-    /* line-height: 24px; */
 }
 
 .select {
@@ -22,7 +19,6 @@
     flex: none;
     order: 0;
     flex-grow: 1;
-    /* z-index: 0; */
 }
 
 .change-comp {

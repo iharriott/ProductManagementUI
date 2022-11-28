@@ -271,9 +271,9 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
                         );
                     },
                     (error: ApiResponse) => {
-                        // this.messageService.openSnackBar(
-                        //     `Error occurred while adding ${error.result.fileName} to branch ${error.result.branchName}`
-                        // );
+                        this.messageService.openSnackBar(
+                            `Error occurred while adding to branch `
+                        );
                     },
                     () => console.log('Done adding file')
                 );
@@ -344,7 +344,6 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
 
     closeDialog(): void {
         if (this.view === 'view') {
-            //this.router.navigate(['viewfilelist']);
             this.router.navigate(['multirevision']);
         } else if (this.view === 'edit') {
             this.router.navigate(['editfilelist']);

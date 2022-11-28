@@ -5,10 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import {
-    CharacteristicsDefinition,
-    CharacteristicsDetail
-} from '../interfaces/characteristicsDefinition';
+import { CharacteristicsDetail } from '../interfaces/characteristicsDefinition';
 
 @Component({
     selector: 'app-characteristics-list',
@@ -31,7 +28,7 @@ export class CharacteristicsListComponent implements OnInit {
     productDefinition;
     response!: CharacteristicsDetail[];
     displayedColumns;
-    checkBoxLabel = 'View Characteristics';
+    checkBoxLabel = 'View';
     rateRevision;
     effectiveDate;
     renewalDate;
@@ -48,8 +45,9 @@ export class CharacteristicsListComponent implements OnInit {
         const { Identifier, NewBusinessDate, RenewalDate } =
             this.dataService.selectProductCharacteristics;
         this.rateRevision = Identifier;
-        this.effectiveDate = NewBusinessDate;
-        this.renewalDate = RenewalDate;
+        this.effectiveDate =
+            this.dataService.getDateFromUTCShort(NewBusinessDate);
+        this.renewalDate = this.dataService.getDateFromUTCShort(RenewalDate);
 
         this.getCharacteristics();
     }
@@ -123,6 +121,11 @@ export class CharacteristicsListComponent implements OnInit {
 
     onClickView() {
         this.router.navigate(['characteristicsview']);
+    }
+
+    navigateToDetail(row) {
+        this.dataService.currentCharacteristic = row;
+        this.router.navigate(['characteristicdetail']);
     }
 
     goBack() {}

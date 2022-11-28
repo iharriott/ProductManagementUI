@@ -1,7 +1,4 @@
 <div>
-    <!-- <mat-checkbox [(ngModel)]="showJson" (ngModelChange)="updateAllComplete()">
-        Show Json
-    </mat-checkbox>  -->
     <mat-toolbar>
         <mat-toolbar-row class="toobar-position">
             <div>
@@ -21,17 +18,16 @@
                     (click)="setTemplate('rawJson')"
                     class="button-width"
                 >
-                    <!-- <mat-icon>save</mat-icon> -->
                     Json
                 </button>
                 <button
+                    *ngIf="refinementEnabled"
                     style="margin-right: 5px"
                     mat-raised-button
                     color="primary"
                     (click)="setTemplate('refinement')"
                     class="button-width"
                 >
-                    <!-- <mat-icon>file_download</mat-icon> -->
                     Refinement
                 </button>
             </div>
@@ -86,6 +82,21 @@
                                 placeholder="datatype"
                                 value=""
                             />
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field
+                            class="example-full-width"
+                            appearance="standard"
+                        >
+                            <mat-label>Description</mat-label>
+                            <textarea
+                                matInput
+                                formControlName="description"
+                                placeholder="Description"
+                                rows="5"
+                            >
+                            </textarea>
                         </mat-form-field>
                     </div>
 
@@ -151,12 +162,13 @@
 
                                 <div class="well">
                                     <div
+                                        *ngIf="isValuesExist(i) > 0"
                                         formArrayName="validValues"
                                         class="form-group"
                                     >
                                         <div
                                             *ngFor="
-                                                let value of getValidValuesArray(
+                                                let validValue of getValidValuesArray(
                                                     validation
                                                 )?.controls;
                                                 let m = index
@@ -169,12 +181,15 @@
                                                         appearance="standard"
                                                     >
                                                         <mat-label
-                                                            >Value</mat-label
+                                                            >Valid
+                                                            Value</mat-label
                                                         >
                                                         <input
                                                             matInput
                                                             placeholder="Value"
-                                                            value="value"
+                                                            value="{{
+                                                                validValue.value
+                                                            }}"
                                                         />
                                                     </mat-form-field>
                                                 </div>
@@ -189,6 +204,12 @@
                     </div>
                 </mat-card-content>
             </mat-card>
+            <div>
+                <button mat-button color="primary" (click)="goBack()">
+                    <mat-icon>fast_rewind</mat-icon>
+                    Back
+                </button>
+            </div>
         </form>
     </ng-template>
 </div>
@@ -281,12 +302,6 @@
                                         rows="5"
                                     >
                                     </textarea>
-                                    <!-- <input
-                                        formControlName="expression"
-                                        matInput
-                                        placeholder="Expression"
-                                        value=""
-                                    /> -->
                                 </mat-form-field>
                             </div>
                             <div class="row">
@@ -303,6 +318,68 @@
                                     />
                                 </mat-form-field>
                             </div>
+
+                            <!-- start loop-->
+
+                            <div class="well">
+                                <div
+                                    *ngIf="
+                                        isRequiredCharacteristicsExist(i) > 0
+                                    "
+                                    formArrayName="requiredCharacteristics"
+                                    class="form-group"
+                                >
+                                    <div class="col-sm-9">
+                                        <legend>
+                                            Required Characteristics
+                                        </legend>
+                                    </div>
+                                    <div
+                                        *ngFor="
+                                            let characteristics of getRequiredCharacteristicsArray(
+                                                refinement
+                                            )?.controls;
+                                            let m = index
+                                        "
+                                        [formGroupName]="m"
+                                    >
+                                        <div class="row">
+                                            <mat-form-field
+                                                class="example-full-width"
+                                                appearance="standard"
+                                            >
+                                                <mat-label
+                                                    >Entity Type</mat-label
+                                                >
+                                                <input
+                                                    matInput
+                                                    placeholder="Value"
+                                                    formControlName="entityType"
+                                                />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="row">
+                                            <mat-form-field
+                                                class="example-full-width"
+                                                appearance="standard"
+                                            >
+                                                <mat-label
+                                                    >Characteristic
+                                                    Name</mat-label
+                                                >
+                                                <input
+                                                    matInput
+                                                    placeholder="Value"
+                                                    formControlName="characteristicName"
+                                                />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- end loop-->
                         </div>
                     </div>
                 </div>

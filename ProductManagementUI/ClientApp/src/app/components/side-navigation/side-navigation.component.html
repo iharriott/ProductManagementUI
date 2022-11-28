@@ -8,75 +8,16 @@
         <base href="/" />
     </head>
     <body>
-        <!-- <mat-toolbar>
-            <button
-                mat-icon-button
-                *ngIf="sidenav.mode === 'over'"
-                (click)="sidenav.toggle()"
-            >
-                <mat-icon *ngIf="!sidenav.opened"> menu </mat-icon>
-                <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
-            </button>
-            Product Management UI
-        </mat-toolbar> -->
-
         <mat-sidenav-container>
             <mat-sidenav #sidenav="matSidenav">
                 <img src="../assets/images/GEICO_logo_PNG9.png" alt="" />
                 <h4 class="name"></h4>
                 <p class="designation">Software Engineer</p>
                 <mat-divider></mat-divider>
-                <!-- <div class="row">
-                    <a type="button" routerLink="/product"
-                        >Product Definition</a
-                    >
-                </div> -->
-                <!-- <div class="row">
-                    <a type="button" routerLink="/capping">Capping Rule</a>
-                </div> -->
-                <!-- <div class="row">
-                    <a type="button" routerLink="/characteristics"
-                        >Create Characteristics</a
-                    >
-                </div> -->
-                <!-- <div class="row">
-                    <a type="button" routerLink="/entities">Create Entities</a>
-                </div> -->
-                <!-- <div class="row">
-                    <a type="button" routerLink="">Create Policy</a>
-                </div>
-                <div class="row">
-                    <a type="button" routerLink="">Create Product</a>
-                </div>
-                <div class="row">
-                    <a type="button" routerLink="">Create Manifest</a>
-                </div> -->
-                <!-- <div class="row">
-                    <a type="button" routerLink="/file">File Data Editor</a>
-                </div>
-                <div class="row">
-                    <a type="button" routerLink="/viewer">Data Viewer</a>
-                </div>
-                <div class="row">
-                    <a type="button" routerLink="/datalist">Db Data Editor</a>
-                </div> -->
-                <!-- <div class="row">
-                    <a type="button" routerLink="/filelist">File List</a>
-                </div> -->
+
                 <div class="row">
                     <a type="button" [routerLink]="['dashboard']">DashBoard</a>
                 </div>
-                <!-- <div class="row">
-                    <a type="button" click="onNavigateDashboard()"
-                        >DashBoard2</a
-                    >
-                </div> -->
-                <!-- <button (click)="onNavigateDashboard()">Token</button> -->
-                <!-- <div class="row">
-                    <a type="button" [routerLink]="['/revision']"
-                        >Rate Revision</a
-                    >
-                </div> -->
             </mat-sidenav>
             <mat-sidenav-content>
                 <div class="content mat-elevation-z4">

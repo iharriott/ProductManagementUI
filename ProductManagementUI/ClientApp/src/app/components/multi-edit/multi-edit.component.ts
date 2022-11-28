@@ -14,14 +14,12 @@ export class MultiEditComponent implements OnInit {
     historyData!: History[];
 
     ngOnInit(): void {
-        // debugger;
         this.isListFileData = this.dataService.isListFileData;
         if (this.isListFileData) {
             this.filesList = this.dataService.filesData;
         } else {
             const { result } = this.dataService.currentFileHistoryData;
             const { history } = result;
-            //this.historyData = history;
             this.historyData = history.filter((data: History) =>
                 this.dataService.dateList.includes(
                     this.dataService.getDateFromUTC(data.date)

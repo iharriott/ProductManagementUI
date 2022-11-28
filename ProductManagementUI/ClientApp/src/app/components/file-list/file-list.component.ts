@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import { FactorFile, FileStructure } from '../interfaces/factor-file';
+import { FactorFile } from '../interfaces/factor-file';
 import {
     MatDialogRef,
     MatDialog,

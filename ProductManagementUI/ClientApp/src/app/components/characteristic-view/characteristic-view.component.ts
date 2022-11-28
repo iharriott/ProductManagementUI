@@ -16,8 +16,13 @@ import {
 } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import { Refinement, Validation } from '../interfaces/characteristic-detail';
+import {
+    Refinement,
+    RequiredCharacteristic,
+    Validation
+} from '../interfaces/characteristic-detail';
 import { CommonConstants } from '../../constants/common-constants';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-characteristic-view',
@@ -37,7 +42,7 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
     @ViewChild('refinementJson', { static: true })
     public refinementJson!: TemplateRef<any>;
     utility: any;
-
+    refinementEnabled = false;
     selectedList!: string;
     charactersiticsForm!: FormGroup;
     refinementForm!: FormGroup;
@@ -47,10 +52,13 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
     fileContent;
     jsonContent;
     showJson = true;
+    name!: string;
+    fileVersionId!: string;
     constructor(
         private fb: FormBuilder,
         private apiService: ApiService,
-        private dataService: DataService
+        private dataService: DataService,
+        private router: Router
     ) {}
 
     ngAfterViewInit(): void {
@@ -58,7 +66,6 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        //debugger;
         this.charactersiticsForm = this.fb.group({
             schemaVersion: [''],
             name: [''],
@@ -74,7 +81,14 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
             refinements: this.fb.array([])
         });
 
-        const { name, fileVersionId } = this.currentCharacteristic;
+        this.getCharacteriticDetail();
+    }
+
+    getCharacteriticDetail() {
+        const { name, fileVersionId } = this.currentCharacteristic
+            ? this.currentCharacteristic
+            : this.dataService.currentCharacteristic;
+
         this.apiService
             .getCharacteristicsDetails(name, fileVersionId, true)
             .subscribe((response) => {
@@ -84,7 +98,9 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
                 this.jsonContent = JSON.stringify(result, undefined, 4);
                 const { fileContent } = result;
                 const parsedJson = JSON.parse(fileContent);
-                const json = JSON.stringify(parsedJson, undefined, 4);
+                const { Description } = parsedJson;
+                const description = JSON.stringify(Description);
+
                 const {
                     schemaVersion,
                     name,
@@ -96,21 +112,30 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
                 this.charactersiticsForm.patchValue({
                     schemaVersion: schemaVersion,
                     name: name,
-                    dataType: dataType
+                    dataType: dataType,
+                    description: description
                 });
-                if (validations) {
+                if (validations?.length > 0) {
                     this.setValidations(validations);
                 }
 
-                if (refinements) {
+                if (refinements?.length > 0) {
+                    this.refinementEnabled = true;
                     this.setRefinements(refinements);
                 }
 
-                this.isValuesExist();
+                const idx = this.isRequiredCharacteristicsExist(0);
+                console.log(`index = ${idx}`);
 
                 console.log(
                     `form values ${JSON.stringify(
                         this.charactersiticsForm.value
+                    )}`
+                );
+
+                console.log(
+                    `refinement form values ${JSON.stringify(
+                        this.refinementForm.value
                     )}`
                 );
             });
@@ -143,7 +168,6 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
     }
 
     setTemplate(val: string) {
-        // debugger;
         this.selectedList = val;
         this.utility =
             CommonConstants.listOfCharacteristicsView[this.selectedList];
@@ -155,6 +179,15 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
             'validValues'
         ) as FormArray;
         return validValuesArray;
+    }
+
+    getRequiredCharacteristicsArray(
+        refinementGroup: AbstractControl
+    ): FormArray {
+        const requiredCharacteristicsArray = (refinementGroup as FormGroup).get(
+            'requiredCharacteristics'
+        ) as FormArray;
+        return requiredCharacteristicsArray;
     }
 
     addValidationFormGroup(validation: Validation): FormGroup {
@@ -179,10 +212,17 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
         });
     }
 
-    addRefinements(refinementInput: Refinement): void {
+    addRequiredCharacteristicsFormGroup(requiredChar: RequiredCharacteristic) {
+        return this.fb.group({
+            entityType: requiredChar.entityType,
+            characteristicName: requiredChar.characteristicName
+        });
+    }
+
+    addRefinements(refinementInput: Refinement): FormGroup {
         const refinement = this.addRefinementFormGroup(refinementInput);
         (<FormArray>this.refinementForm.get('refinements')).push(refinement);
-        console.log(`the validation Array ${refinement}`);
+        return refinement;
     }
 
     addValidations(validationInput: Validation): FormGroup {
@@ -190,17 +230,15 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
         (<FormArray>this.charactersiticsForm.get('validations')).push(
             validation
         );
-        console.log(`the validation Array ${validation}`);
         return validation;
     }
 
     addValidValues(validValuesArray: FormArray, validVal: string): void {
-        const value = this.addValidValuesControl(validVal);
+        const value = this.addValidValuesFormGroup(validVal);
         validValuesArray.push(value);
     }
 
-    addValidValuesControl(value) {
-        console.log(`value in add ${value}`);
+    addValidValuesFormGroup(value): FormControl {
         return new FormControl(value);
     }
 
@@ -214,16 +252,40 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
 
     setRefinements(refinements: Refinement[]): void {
         refinements.forEach((refinement) => {
-            console.log(`refinements ${JSON.stringify(refinements)}`);
-            this.addRefinements(refinement);
+            const { requiredCharacteristics } = refinement;
+            const addedRefinement = this.addRefinements(refinement);
+            if (requiredCharacteristics) {
+                this.setRequiredCharacteristics(
+                    addedRefinement,
+                    requiredCharacteristics
+                );
+            }
         });
+    }
+
+    setRequiredCharacteristics(
+        refineformGroup: FormGroup,
+        refinementCharacteristics: RequiredCharacteristic[]
+    ) {
+        const requiredCharacteristicArray = refineformGroup.get(
+            'requiredCharacteristics'
+        ) as FormArray;
+        refinementCharacteristics.forEach((val) => {
+            this.addRefinementCharacteristics(requiredCharacteristicArray, val);
+        });
+    }
+
+    addRefinementCharacteristics(
+        refinementArray: FormArray,
+        requiredChar: RequiredCharacteristic
+    ) {
+        const value = this.addRequiredCharacteristicsFormGroup(requiredChar);
+        refinementArray.push(value);
     }
 
     setValidations(validations: Validation[]): void {
         validations.forEach((validation) => {
             const { validValues } = validation;
-
-            console.log(`valid value in set ${JSON.stringify(validValues)}`);
             const validationformGroup = this.addValidations(validation);
             if (validValues) {
                 this.setValidValues(validationformGroup, validValues);
@@ -235,9 +297,6 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
         const validValuesArray = validationformGroup.get(
             'validValues'
         ) as FormArray;
-        console.log(
-            `validation array controls ${validValuesArray.controls.values}`
-        );
         validValues.forEach((val) => {
             this.addValidValues(validValuesArray, val);
         });
@@ -250,17 +309,23 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
         return this.getRefinements().controls.length;
     }
 
-    isValuesExist() {
+    isValuesExist(index: number) {
         const validationFormGroup = this.getValidations();
-        const validValuesArray = validationFormGroup.get(
-            'validValues'
-        ) as FormArray;
-        console.log(`valid values length ${validValuesArray}`);
-        //return validValuesArray.controls.length;
-        return 1;
+        const formGroup = validationFormGroup.at(index) as FormGroup;
+        const values = formGroup.get('validValues') as FormArray;
+        return values.length;
     }
 
-    updateAllComplete() {
-        this.showJson = !this.showJson;
+    isRequiredCharacteristicsExist(index: number) {
+        const refinementFormGroup = this.getRefinements();
+        const formGroup = refinementFormGroup.at(index) as FormGroup;
+        const requiredCharacteristics = formGroup.get(
+            'requiredCharacteristics'
+        ) as FormArray;
+        return requiredCharacteristics.length;
+    }
+
+    goBack() {
+        this.router.navigate(['characteristicslist']);
     }
 }

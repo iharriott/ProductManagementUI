@@ -33,7 +33,6 @@ export class ProductionDefinitionSearchResultsComponent implements OnInit {
             .subscribe(
                 ({ result }) => {
                     this.productList = result;
-                    //console.log(JSON.stringify(this.productList));
                     this.dataSource = result.map((val) => {
                         return { product: val };
                     });
