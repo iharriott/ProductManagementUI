@@ -86,4 +86,28 @@ export class DataService {
     checkCharacteristicsInList(data: any[], val: string): boolean {
         return data.some((x) => x.name === val);
     }
+
+    getProductMgmtAPIBaseURL():any {
+        return window.localStorage.getItem('ProductMgmtAPIBaseURL');
+    }
+
+    getTenantId():any {
+        return window.localStorage.getItem('TenantId');
+    }
+
+    getClientId():any {
+        return window.localStorage.getItem('ClientId');
+    }
+    getAuthority():any {
+        return window.localStorage.getItem('Authority');
+    }
+    getRedirectUrl():any {
+        return window.localStorage.getItem('RedirectUrl');
+    }
+    getPostLogoutUrl():any {
+        return window.localStorage.getItem('PostLogoutUrl');
+    }
+    getApiScope():any {
+        return window.localStorage.getItem('ApiScope');
+    }
 }

@@ -18,7 +18,7 @@ import { ProductDefinitionDetail } from '../components/interfaces/product-defini
 })
 export class ApiService {
     endpoint;
-    baseUrl = environment.gitApiBaseUrl;
+    baseUrl = window.localStorage.getItem('ProductMgmtAPIBaseURL');
     constructor(private http: HttpClient, private dataService: DataService) {}
 
     getRatingTables(

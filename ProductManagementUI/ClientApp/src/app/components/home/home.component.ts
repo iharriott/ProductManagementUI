@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         return this.dataService.getLoggedInUser();
     }
 
-    ngOnInit(): void {
+    ngOnInit(): void {     
         this.broadcastService.subscribe('msal:loginFailure', (payload) => {
             this.isUserLoggedIn = false;
         });
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.dataService.loggedInUser = this.loggedInUser;
             const tokenRequest = {
                 scopes: [
-                    'https://geico365.onmicrosoft.com/51a4ee2d-27c4-425f-9542-b0f5117f00e1/user_impersonation'
+                    this.dataService.getApiScope()
                 ]
             };
 

@@ -20,11 +20,9 @@ import { Configuration } from 'msal';
 import { AuthOptions, CacheOptions } from 'msal/lib-commonjs/Configuration';
 import { ConfigurationService } from './configuration/configuration.service';
 
-const appInitializerFn = (appConfig: ConfigurationService) => {
-    return () => {
-      return appConfig.loadConfig();      
-    };    
-  };
+  let envConfig: any = {
+      configValues: {}
+    };
 
 const isIE =
     window.navigator.userAgent.indexOf('MSIE') > -1 ||
@@ -60,15 +58,23 @@ let cacheOptions: CacheOptions = {
 
 let config: Configuration = { auth: authOptions, cache: cacheOptions };
 
-function MSALConfigFactory(): Configuration {
+function MSALConfigFactory(): Configuration {       
+        window.localStorage.setItem('ProductMgmtAPIBaseURL', envConfig.configValues.ProductMgmtAPIBaseURL);
+        window.localStorage.setItem('TenantId', envConfig.configValues.TenantId);
+        window.localStorage.setItem('Clinetid', envConfig.configValues.ClientId);
+        window.localStorage.setItem('Authority', envConfig.configValues.Authority);
+        window.localStorage.setItem('RedirectUrl', envConfig.configValues.RedirectUrl);
+        window.localStorage.setItem('PostLogoutUrl', envConfig.configValues.PostLogoutUrl);
+        window.localStorage.setItem('ApiScope', envConfig.configValues.ApiScope); 
+
+
     return {
         auth: {
-            clientId: 'eaffd59c-cc2d-4570-892a-7630be7c0a62',
-            authority:
-                'https://login.microsoftonline.com/7389d8c0-3607-465c-a69f-7d4426502912',
+            clientId: envConfig.configValues.ClientId,
+            authority: envConfig.configValues.Authority,
             validateAuthority: true,
-            redirectUri: environment.redirectUrl,
-            postLogoutRedirectUri: environment.postLogoutUrl,
+            redirectUri: envConfig.configValues.RedirectUrl,
+            postLogoutRedirectUri: envConfig.configValues.PostLogoutUrl,
             navigateToLoginRequestUrl: true
         },
         cache: {
@@ -104,13 +110,20 @@ function MSALAngularConfigFactory(): MsalAngularConfiguration {
         MsalModule
     ],
     schemas: [NO_ERRORS_SCHEMA],
-    providers: [
-        ConfigurationService,
+    providers: [        
         {
             provide: APP_INITIALIZER,
-            useFactory: appInitializerFn,
-            multi: true,
-            deps: [ConfigurationService]
+            useFactory: () => {
+               return () => {
+                console.log('Starting APP_INITIALIZER');
+                return fetch(environment.uiBaseUrl + '/configuration')
+               .then(response => response.json())
+               .then(json => { 
+               envConfig.configValues = json;
+              });
+            };
+            },
+            multi: true            
         },
         {
             provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
