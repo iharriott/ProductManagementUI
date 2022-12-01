@@ -24,3 +24,7 @@
 /.vs/ProductManagement/v17/.suo
 /.vs/ProductManagementUI/project-colors.json
 
+/ProductManagementUI.FunctionalTests/bin/Debug/net6.0
+/ProductManagementUI.FunctionalTests/obj
+/Tests/ProductManagementUI.FunctionalTests/bin/Debug/net6.0
+/Tests/ProductManagementUI.FunctionalTests/obj
