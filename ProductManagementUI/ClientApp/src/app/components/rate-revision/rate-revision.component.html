@@ -1,4 +1,22 @@
-<div *ngIf="dataSource.data.length > 0">
+<button
+    mat-raised-button
+    color="primary"
+    (click)="onClickView()"
+    class="button-width button-position"
+>
+    <mat-icon>visibility</mat-icon>
+    View Revisions
+</button>
+<app-generic-grid
+    [tableDataState$]="tableData$"
+    [displayColumnsInput]="displayedColumns"
+    (linkClicked)="goToFiles($event)"
+    (checkboxClicked)="onClick($event)"
+    [url]="backUrl"
+    [showCheckbox]="showCheckbox"
+></app-generic-grid>
+
+<!-- <div *ngIf="dataSource.data.length > 0">
     <div>
         <mat-form-field appearance="outline" class="example-full-width">
             <mat-label>Filter</mat-label>
@@ -23,9 +41,6 @@
 </div>
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
-        {{
-            dataSource.data.length
-        }}
         <ng-container matColumnDef="revision">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 Rate Revision
@@ -78,4 +93,4 @@
             </mat-paginator>
         </div>
     </div>
-</div>
+</div> -->

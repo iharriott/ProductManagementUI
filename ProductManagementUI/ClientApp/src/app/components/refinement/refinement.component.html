@@ -1,0 +1,78 @@
+<h4 class="header">Refinement {{ arrayIndex + 1 }}</h4>
+<div class="form-format">
+    <form [formGroup]="refinementForm">
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>SchemaVersion</mat-label>
+                <input
+                    formControlName="schemaVersion"
+                    matInput
+                    placeholder="SchemaVersion"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Name</mat-label>
+                <input
+                    formControlName="name"
+                    matInput
+                    placeholder="Name"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Refinement Type</mat-label>
+                <input
+                    formControlName="refinementType"
+                    matInput
+                    placeholder="Refinement Type"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Expression</mat-label>
+                <textarea
+                    matInput
+                    formControlName="expression"
+                    placeholder="Expression"
+                    rows="5"
+                    readonly
+                >
+                </textarea>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Priority</mat-label>
+                <input
+                    formControlName="priority"
+                    matInput
+                    placeholder="Priority"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div *ngIf="isRequiredCharacteristicsExist(refinementForm) > 0">
+            <app-required-characteristic
+                *ngFor="
+                    let characteristics of getRequiredCharacteristicsArray(
+                        refinementForm
+                    )?.controls;
+                    let m = index
+                "
+                [requiredCharacteristicForm]="
+                    convertToFormGroup(characteristics)
+                "
+                [arrayIndex]="m"
+            >
+            </app-required-characteristic>
+        </div>
+    </form>
+</div>

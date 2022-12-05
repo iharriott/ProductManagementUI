@@ -33,6 +33,11 @@ import { ProductSearchComponent } from './product-search/product-search.componen
 import { ProductionDefinitionSearchResultsComponent } from './production-definition-search-results/production-definition-search-results.component';
 import { GenericGridComponent } from './generic-grid/generic-grid.component';
 import { StateFilingComponent } from './state-filing/state-filing.component';
+import { ValidationComponent } from './validation/validation.component';
+import { ValidValuesComponent } from './valid-values/valid-values.component';
+import { RefinementComponent } from './refinement/refinement.component';
+import { RequiredCharacteristicComponent } from './required-characteristic/required-characteristic.component';
+import { FileStructureErrorComponent } from './file-structure-error/file-structure-error.component';
 
 @NgModule({
     declarations: [
@@ -62,7 +67,12 @@ import { StateFilingComponent } from './state-filing/state-filing.component';
         ProductSearchComponent,
         ProductionDefinitionSearchResultsComponent,
         GenericGridComponent,
-        StateFilingComponent
+        StateFilingComponent,
+        ValidationComponent,
+        ValidValuesComponent,
+        RefinementComponent,
+        RequiredCharacteristicComponent,
+        FileStructureErrorComponent
     ],
     imports: [
         CommonModule,

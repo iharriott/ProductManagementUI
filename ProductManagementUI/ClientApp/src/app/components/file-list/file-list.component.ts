@@ -13,6 +13,7 @@ import {
 } from '@angular/material/dialog';
 import { FileSelectionPopupComponent } from '../file-selection-popup/file-selection-popup.component';
 import { RateRevisions } from '../interfaces/rate-revisions';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'app-file-list',
@@ -24,6 +25,9 @@ export class FileListComponent implements OnInit {
     dataSource!: MatTableDataSource<any>;
     @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort!: MatSort;
+    tableData$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+    backUrl: string = 'revision';
+    showCheckbox = true;
     constructor(
         private apiService: ApiService,
         public dataService: DataService,
@@ -36,7 +40,6 @@ export class FileListComponent implements OnInit {
         this.dataSource = new MatTableDataSource();
     }
     fileSummaryData!: any[];
-    displayedColumns!: string[];
     columnHeadings!: string[];
     action: string = 'idAction001';
     selectedBranch!: string;
@@ -50,6 +53,15 @@ export class FileListComponent implements OnInit {
     fileList: any[] = [];
     fontIcon!: string;
     dialogText!: string;
+    displayedColumns = [
+        'fileName',
+        'lob',
+        'lastUpdated',
+        'effectiveDate',
+        'renewalDate',
+        'fileVersionId',
+        'action'
+    ];
 
     ngOnInit(): void {
         this.setViewMode();
@@ -59,7 +71,7 @@ export class FileListComponent implements OnInit {
 
     setViewMode() {
         if (this.branch !== undefined) {
-            this.selectedBranch = this.branch.revision;
+            this.selectedBranch = this.branch;
         } else {
             this.selectedBranch = this.dataService.selectedBranch;
         }
@@ -75,20 +87,20 @@ export class FileListComponent implements OnInit {
     }
 
     onGetFiles(): void {
-        this.apiService.getRatingTables(this.selectedBranch, false).subscribe(
-            (data: FactorFile) => {
+        this.apiService.getRatingTables(this.selectedBranch, false).subscribe({
+            next: (data: FactorFile) => {
                 this.dataService.currentFileData = data;
                 this.fileSummaryData = data.result.map((fileData) => {
                     return {
                         fileName: fileData.fileName,
                         filePath: fileData.filePath,
-                        lastUpdated: this.dataService.getDateFromUTC(
+                        lastUpdated: this.dataService.getDateFromUTCShort(
                             fileData.lastUpdated
                         ),
-                        effectiveDate: this.dataService.getDateFromUTC(
+                        effectiveDate: this.dataService.getDateFromUTCShort(
                             fileData.effectiveDate
                         ),
-                        renewalDate: this.dataService.getDateFromUTC(
+                        renewalDate: this.dataService.getDateFromUTCShort(
                             fileData.renewalDate
                         ),
                         fileVersionId: fileData.fileVersionId,
@@ -97,31 +109,21 @@ export class FileListComponent implements OnInit {
                 });
 
                 this.dataSource.data = [...this.fileSummaryData];
+                this.tableData$.next(this.dataSource.data);
                 this.columnHeadings = this.dataService.getColumnHeadings(
                     this.fileSummaryData
                 );
-                this.displayedColumns = [
-                    'fileName',
-                    'lob',
-                    'lastUpdated',
-                    'effectiveDate',
-                    'renewalDate',
-                    'fileVersionId',
-                    'action'
-                ];
+
                 this.dataLoaded = true;
-                console.log(`column headings ${this.displayedColumns}`);
-                console.log(JSON.stringify(this.fileSummaryData));
             },
-            (error: any) => console.log(error),
-            () => console.log('Done retrieving users')
-        );
+            error: (error: any) => console.log(error),
+            complete: () => console.log('Done retrieving users')
+        });
     }
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
-        console.log(JSON.stringify(this.dataSource.data));
 
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
@@ -146,11 +148,12 @@ export class FileListComponent implements OnInit {
     }
 
     loadData(row) {
-        const { fileHistoryId, fileName, fileId } = row;
+        this.dataService.isListFileData = false;
+        const { fileVersionId, fileName } = row;
         if (this.view === 'edit') {
-            this.router.navigate(['editfile', fileHistoryId, fileName, fileId]);
+            this.router.navigate(['editfile', fileVersionId, fileName]);
         } else {
-            this.router.navigate(['viewfile', fileHistoryId, fileName, fileId]);
+            this.router.navigate(['viewfile', fileVersionId, fileName]);
         }
     }
 
@@ -163,9 +166,12 @@ export class FileListComponent implements OnInit {
     }
 
     onChange(row) {
+        const dataObj = {
+            fileName: row.data.fileName,
+            fileVersionId: row.data.fileVersionId
+        };
         this.dataService.selectedBranch = this.selectedBranch;
-        this.fileList = [...this.fileList, row];
-        console.log(this.fileList);
+        this.fileList = [...this.fileList, dataObj];
     }
 
     onSelect() {
@@ -173,7 +179,6 @@ export class FileListComponent implements OnInit {
             this.dataService.isListFileData = true;
             this.dataService.filesData = this.fileList;
             this.router.navigate([this.navigatedRoute]);
-            console.log(this.route);
         } else {
             this.dialogData = this.dialogText;
             this.openDialog();
@@ -195,4 +200,6 @@ export class FileListComponent implements OnInit {
         this.dataService.currentFile = fileName;
         this.router.navigate(['filehistory', fileName]);
     }
+
+    goToFiles(event) {}
 }

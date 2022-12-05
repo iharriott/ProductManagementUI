@@ -70,19 +70,19 @@ describe('DataService', () => {
         expect(httpService.get).toHaveBeenCalledWith(endpoint);
     });
 
-    it('should test getRatingTablesFilter', () => {
-        const res = 'Technoworld';
-        const apiAction = 'GetRatingTables';
-        const fileVersion = 'CW';
-        const includeContent = true;
-        const fileName = 'atfaultAccident';
-        const endpoint = `${gitApiBaseUrl}/${apiAction}/${fileVersion}?includeContent=${includeContent}?ratingFactorFilter=${fileName}`;
-        jest.spyOn(httpService, 'get').mockReturnValue(of(res));
-        service.getRatingTablesFilter(fileVersion, includeContent, fileName);
+    // it('should test getRatingTablesFilter', () => {
+    //     const res = 'Technoworld';
+    //     const apiAction = 'GetRatingTables';
+    //     const fileVersion = 'CW';
+    //     const includeContent = true;
+    //     const fileName = 'atfaultAccident';
+    //     const endpoint = `${gitApiBaseUrl}/${apiAction}/${fileVersion}?includeContent=${includeContent}?ratingFactorFilter=${fileName}`;
+    //     jest.spyOn(httpService, 'get').mockReturnValue(of(res));
+    //     service.getRatingTablesFilter(fileVersion, includeContent, fileName);
 
-        expect(httpService.get).toBeCalledTimes(1);
-        expect(httpService.get).toHaveBeenCalledWith(endpoint);
-    });
+    //     expect(httpService.get).toBeCalledTimes(1);
+    //     expect(httpService.get).toHaveBeenCalledWith(endpoint);
+    // });
 
     it('should test getRateFileHistory', () => {
         const res = 'Technoworld';

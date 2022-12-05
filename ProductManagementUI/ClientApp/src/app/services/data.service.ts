@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 import { FactorFile } from '../components/interfaces/factor-file';
 import { ProductSearch } from '../components/interfaces/product-search';
+import * as R from 'ramda';
 
 @Injectable({
     providedIn: 'root'
@@ -29,6 +30,10 @@ export class DataService {
     searchedProduct!: string;
     selectProductCharacteristics!: any;
     currentCharacteristic!: any;
+    fileLoadedFromDBForEditing: boolean = false;
+    headerDiffColumn!: string;
+    arrayFirstLength!: number;
+    arraySecondLength!: number;
 
     getLoggedInUser() {
         return window.localStorage.getItem('userName');
@@ -110,4 +115,20 @@ export class DataService {
     getApiScope():any {
         return window.localStorage.getItem('ApiScope');
     }
+
+
+    validateFileStructure(arrayFirst: any[], arraySecond: any[]): boolean {
+        arrayFirst = R.map(R.toLower, arrayFirst);
+        arraySecond = R.map(R.toLower, arraySecond);
+        this.headerDiffColumn = R.difference(arraySecond, arrayFirst);
+        this.arrayFirstLength = arrayFirst.length;
+        this.arraySecondLength = arraySecond.length;
+
+        const lengthValidation =
+            this.arrayFirstLength === this.arraySecondLength;
+        return this.headerDiffColumn.length === 0 && lengthValidation
+            ? true
+            : false;
+    }
+
 }

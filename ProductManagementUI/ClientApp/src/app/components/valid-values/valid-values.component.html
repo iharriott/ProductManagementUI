@@ -1,0 +1,21 @@
+<h4 class="header">Valid Values {{ arrayIndex + 1 }}</h4>
+<div class="form-format2">
+    <form [formGroup]="validValuesForm">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field
+                    class="example-full-width"
+                    appearance="standard"
+                >
+                    <input
+                        matInput
+                        placeholder="Value"
+                        value=""
+                        formControlName="validValue"
+                        readonly
+                    />
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</div>

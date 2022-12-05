@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -8,11 +8,7 @@ import { DataService } from 'src/app/services/data.service';
     styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private dataService: DataService
-    ) {}
+    constructor(private router: Router, private dataService: DataService) {}
     longText = 'New Dashboard';
 
     viewFileList() {

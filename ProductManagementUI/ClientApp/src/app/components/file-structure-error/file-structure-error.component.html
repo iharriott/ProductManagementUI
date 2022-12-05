@@ -1,0 +1,25 @@
+<!-- <h1 mat-dialog-title>File Structure Error</h1>
+<div mat-dialog-content>File Structure failed validation</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>No</button> -->
+<!-- <button mat-button mat-dialog-close cdkFocusInitial>Ok</button> -->
+<!-- </div> -->
+
+<mat-dialog-content>
+    <p>
+        {{ message }}
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <!-- <button
+        mat-raised-button
+        color="primary"
+        (click)="onConfirmClick()"
+        tabindex="1"
+    >
+        {{ confirmButtonText }}
+    </button> -->
+    <button mat-raised-button mat-dialog-close tabindex="-1">
+        {{ cancelButtonText }}
+    </button>
+</mat-dialog-actions>

@@ -1,0 +1,50 @@
+<h4 class="header">Validation {{ arrayIndex + 1 }}</h4>
+<div class="form-format2">
+    <form [formGroup]="validationForm">
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Name</mat-label>
+                <input
+                    formControlName="name"
+                    matInput
+                    placeholder="Name"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Validation Type</mat-label>
+                <input
+                    formControlName="validationType"
+                    matInput
+                    placeholder="Validation Type"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Error Message</mat-label>
+                <input
+                    formControlName="errorMessage"
+                    matInput
+                    placeholder="Error Message"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div *ngIf="isValuesExist(validationForm) > 0">
+            <app-valid-values
+                *ngFor="
+                    let validValue of getValidValuesArray(validationForm)
+                        ?.controls;
+                    let m = index
+                "
+                [validValuesForm]="convertToFormGroup(validValue)"
+                [arrayIndex]="m"
+            >
+            </app-valid-values>
+        </div>
+    </form>
+</div>

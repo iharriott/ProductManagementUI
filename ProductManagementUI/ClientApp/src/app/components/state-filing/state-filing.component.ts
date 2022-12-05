@@ -28,8 +28,13 @@ export class StateFilingComponent implements OnInit {
         'Comp'
     ];
     tableData$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+    backUrl: string = 'productsearchresult';
+    showCheckbox = true;
 
     ngOnInit(): void {
+        if (this.showCheckbox) {
+            this.displayColumns = [...this.displayColumns, 'action'];
+        }
         this.productFilter = this.dataService.searchedProduct;
         this.GetProductDefinitionsDetails();
     }
@@ -37,8 +42,8 @@ export class StateFilingComponent implements OnInit {
     GetProductDefinitionsDetails() {
         this.apiService
             .GetProductDefinitionsDetails(this.productFilter)
-            .subscribe(
-                ({ result }) => {
+            .subscribe({
+                next: ({ result }) => {
                     this.dataSource = result.map((val) => {
                         return {
                             Identifier: val.productDefinition,
@@ -62,11 +67,11 @@ export class StateFilingComponent implements OnInit {
                     this.tableData$.next(this.dataSource);
                     console.log(JSON.stringify(this.displayColumns));
                 },
-                (error) => {
+                error: (error) => {
                     console.log(error);
                 },
-                () => console.log('completed')
-            );
+                complete: () => console.log('completed')
+            });
     }
 
     goToProducts(event) {

@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
 import { RateRevisions } from '../interfaces/rate-revisions';
@@ -19,7 +20,10 @@ export class RateRevisionComponent implements OnInit {
     branchList!: any[];
     selectedVersionlist: string[] = [];
     columnHeadings;
-    displayedColumns!: string[];
+    tableData$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+    backUrl: string = 'dashboard';
+    showCheckbox = true;
+    displayedColumns: string[] = ['revision', 'action'];
 
     constructor(
         public dataService: DataService,
@@ -34,23 +38,25 @@ export class RateRevisionComponent implements OnInit {
     }
 
     getRateRevisions() {
-        this.apiService.getRateRevisions().subscribe((data: RateRevisions) => {
-            this.branchList = data?.result.map((res: string) => {
-                return { revision: res };
-            });
-            this.dataSource.data = [...this.branchList];
-            this.columnHeadings = this.dataService.getColumnHeadings(
-                this.branchList
-            );
-            console.log(this.branchList);
-            this.displayedColumns = [...this.columnHeadings, 'action'];
+        this.apiService.getRateRevisions().subscribe({
+            next: (data: RateRevisions) => {
+                this.branchList = data?.result.map((res: string) => {
+                    return { revision: res };
+                });
+                this.dataSource.data = [...this.branchList];
+                this.columnHeadings = this.dataService.getColumnHeadings(
+                    this.branchList
+                );
+                this.tableData$.next(this.dataSource.data);
+            },
+            error: () => {},
+            complete: () => {}
         });
     }
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
-        console.log(JSON.stringify(this.dataSource.data));
 
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
@@ -62,34 +68,47 @@ export class RateRevisionComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    onClick(checked, row) {
+    onClick(data) {
         if (
-            !checked &&
-            !this.dataService.checkInList(this.selectedVersionlist, row)
+            !data.state &&
+            !this.dataService.checkInList(
+                this.selectedVersionlist,
+                data.data.revision
+            )
         ) {
             this.selectedVersionlist = this.dataService.addToList(
                 this.selectedVersionlist,
-                row
+                data.data.revision
             );
         }
 
         if (
-            checked &&
-            this.dataService.checkInList(this.selectedVersionlist, row)
+            data.state &&
+            this.dataService.checkInList(
+                this.selectedVersionlist,
+                data.data.revision
+            )
         ) {
             this.selectedVersionlist = this.dataService.removeFromList(
                 this.selectedVersionlist,
-                row
+                data.data.revision
             );
         }
     }
 
     viewHistory(row) {}
 
-    goToDashboard() {}
+    goToDashboard() {
+        this.router.navigate(['dashboard']);
+    }
 
     onClickView() {
         this.dataService.revisionList = this.selectedVersionlist;
         this.router.navigate(['multirevision']);
+    }
+
+    goToFiles(event) {
+        this.dataService.selectedBranch = event.revision;
+        this.router.navigate(['viewfilelist']);
     }
 }

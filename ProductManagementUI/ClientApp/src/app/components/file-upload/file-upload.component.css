@@ -223,9 +223,25 @@ button {
 }
 
 .toobar-position {
-    justify-content: right;
+    justify-content: center;
 }
 
 textarea {
     color: black;
+}
+
+.mat-form-field {
+    width: 200px !important;
+    color: black !important;
+    height: 2px !important;
+    font-size: small !important;
+}
+
+th {
+    font-size: small !important;
+}
+
+.field-margin {
+    margin-left: 10px;
+    margin-bottom: 10px;
 }

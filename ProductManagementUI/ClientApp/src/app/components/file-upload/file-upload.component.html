@@ -79,53 +79,49 @@
         </mat-toolbar-row>
     </mat-toolbar>
 
-    <div class="row">
-        <div class="col-md-6">
-            <mat-form-field appearance="outline" class="field-width col-width">
-                <mat-label>Select Revision</mat-label>
-                <mat-select
-                    [(ngModel)]="selectedBranch"
-                    name="exportType"
-                    (selectionChange)="onBranchChange()"
-                    [disabled]="view == 'view'"
-                >
-                    <mat-option
-                        *ngFor="let branch of branchList"
-                        [value]="branch"
-                        class="button-width"
-                    >
-                        {{ branch }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-md-6" *ngIf="!viewState || !isListFileData">
-            <mat-form-field class="field-width col-width" appearance="outline">
-                <mat-label>Add a Comment</mat-label>
-                <textarea
-                    [(ngModel)]="comment"
-                    matInput
-                    placeholder="comment"
-                ></textarea>
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <mat-form-field
-                appearance="outline"
-                *ngIf="dataSource.data.length > 0"
-                class="field-max-width col-width"
+    <div class="row field-margin">
+        <mat-form-field appearance="outline" class="mat-form-field">
+            <mat-label>Select Revision</mat-label>
+            <mat-select
+                [(ngModel)]="selectedBranch"
+                name="exportType"
+                (selectionChange)="onBranchChange()"
+                [disabled]="view == 'view'"
             >
-                <mat-label>Filter</mat-label>
-                <input
-                    matInput
-                    (keyup)="applyFilter($event)"
-                    placeholder="Filter Criteria"
-                    #input
-                />
-            </mat-form-field>
-        </div>
+                <mat-option
+                    *ngFor="let branch of branchList"
+                    [value]="branch"
+                    class="button-width"
+                >
+                    {{ branch }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row field-margin">
+        <mat-form-field class="field-width col-width" appearance="outline">
+            <mat-label>Add a Comment</mat-label>
+            <textarea
+                [(ngModel)]="comment"
+                matInput
+                placeholder="comment"
+            ></textarea>
+        </mat-form-field>
+    </div>
+    <div class="row field-margin">
+        <mat-form-field
+            appearance="outline"
+            *ngIf="dataSource.data.length > 0"
+            class="field-max-width col-width"
+        >
+            <mat-label>Filter</mat-label>
+            <input
+                matInput
+                (keyup)="applyFilter($event)"
+                placeholder="Filter Criteria"
+                #input
+            />
+        </mat-form-field>
     </div>
 
     <p *ngIf="dataSource.data.length > 0">
@@ -175,7 +171,7 @@
         <div class="col-md-6">
             <mat-paginator
                 [hidden]="!dataSource.data.length"
-                [pageSizeOptions]="[5, 10, 25, 100]"
+                [pageSizeOptions]="[20, 30, 50, 100]"
                 aria-label="Select page of
             files"
             >

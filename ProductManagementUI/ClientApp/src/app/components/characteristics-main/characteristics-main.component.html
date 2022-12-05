@@ -1,1 +1,51 @@
-<p>characteristics-main works!</p>
+<h4 class="header">Characteristic</h4>
+<div class="form-format">
+    <form [formGroup]="characteristicForm">
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Schema Version</mat-label>
+                <input
+                    formControlName="schemaVersion"
+                    matInput
+                    placeholder="SchemaVersion"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Name</mat-label>
+                <input
+                    formControlName="name"
+                    matInput
+                    placeholder="Name"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Data Type</mat-label>
+                <input
+                    formControlName="dataType"
+                    matInput
+                    placeholder="datatype"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Description</mat-label>
+                <textarea
+                    matInput
+                    formControlName="description"
+                    placeholder="Description"
+                    rows="5"
+                    readonly
+                >
+                </textarea>
+            </mat-form-field>
+        </div>
+    </form>
+</div>

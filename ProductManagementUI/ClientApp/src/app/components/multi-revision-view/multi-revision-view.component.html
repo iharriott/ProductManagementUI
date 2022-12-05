@@ -4,7 +4,7 @@
     (selectedTabChange)="onTabChange($event)"
 >
     <div *ngFor="let rev of revisionList">
-        <mat-tab label="{{ rev.revision }}">
+        <mat-tab label="{{ rev }}">
             <app-file-list [branch]="rev"></app-file-list>
         </mat-tab>
     </div>

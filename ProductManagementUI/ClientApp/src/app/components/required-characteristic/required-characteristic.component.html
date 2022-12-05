@@ -1,0 +1,28 @@
+<h4 class="header">Required Characteristics {{ arrayIndex + 1 }}</h4>
+<div class="form-format2">
+    <form [formGroup]="requiredCharacteristicForm">
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Entity Type</mat-label>
+                <input
+                    matInput
+                    placeholder="Value"
+                    formControlName="entityType"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="example-full-width" appearance="standard">
+                <mat-label>Characteristic Name</mat-label>
+                <input
+                    matInput
+                    placeholder="Value"
+                    formControlName="characteristicName"
+                    readonly
+                />
+            </mat-form-field>
+        </div>
+    </form>
+</div>

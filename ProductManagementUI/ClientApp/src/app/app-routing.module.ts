@@ -106,6 +106,16 @@ const routes: Routes = [
                 path: 'characteristicdetail',
                 component: CharacteristicViewComponent,
                 data: { view: 'characteristicdetail' }
+            },
+            {
+                path: 'editfile/:fileVersionId/:fileName',
+                component: FileUploadComponent,
+                data: { view: 'edit' }
+            },
+            {
+                path: 'viewfile/:fileVersionId/:fileName',
+                component: FileUploadComponent,
+                data: { view: 'view' }
             }
         ]
     },
@@ -114,11 +124,11 @@ const routes: Routes = [
         component: ProductDefinitionComponent,
         data: { view: 'product' }
     },
-    {
-        path: 'editfile/:fileHistoryId/:fileName/:fileId',
-        component: FileUploadComponent,
-        data: { view: 'edit' }
-    },
+    // {
+    //     path: 'editfile/:fileVersionId/:fileName',
+    //     component: FileUploadComponent,
+    //     data: { view: 'edit' }
+    // },
     {
         path: 'addNewfile',
         component: FileUploadComponent,

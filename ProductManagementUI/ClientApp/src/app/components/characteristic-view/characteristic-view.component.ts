@@ -11,7 +11,6 @@ import {
     AbstractControl,
     FormArray,
     FormBuilder,
-    FormControl,
     FormGroup
 } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
@@ -23,6 +22,7 @@ import {
 } from '../interfaces/characteristic-detail';
 import { CommonConstants } from '../../constants/common-constants';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'app-characteristic-view',
@@ -54,6 +54,7 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
     showJson = true;
     name!: string;
     fileVersionId!: string;
+    formData$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
     constructor(
         private fb: FormBuilder,
         private apiService: ApiService,
@@ -89,9 +90,8 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
             ? this.currentCharacteristic
             : this.dataService.currentCharacteristic;
 
-        this.apiService
-            .getCharacteristicsDetails(name, fileVersionId, true)
-            .subscribe((response) => {
+        this.apiService.getCharacteristicsDetails(name, true).subscribe({
+            next: (response) => {
                 this.apiReponse = response;
                 this.fileContent = this.apiReponse;
                 const { result } = this.apiReponse;
@@ -125,20 +125,11 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
                 }
 
                 const idx = this.isRequiredCharacteristicsExist(0);
-                console.log(`index = ${idx}`);
-
-                console.log(
-                    `form values ${JSON.stringify(
-                        this.charactersiticsForm.value
-                    )}`
-                );
-
-                console.log(
-                    `refinement form values ${JSON.stringify(
-                        this.refinementForm.value
-                    )}`
-                );
-            });
+                this.formData$.next(this.charactersiticsForm);
+            },
+            error: () => {},
+            complete: () => {}
+        });
     }
 
     determineTemplate() {
@@ -238,8 +229,8 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
         validValuesArray.push(value);
     }
 
-    addValidValuesFormGroup(value): FormControl {
-        return new FormControl(value);
+    addValidValuesFormGroup(value): FormGroup {
+        return this.fb.group({ validValue: value });
     }
 
     getValidations(): FormArray {
@@ -309,23 +300,35 @@ export class CharacteristicViewComponent implements OnInit, AfterViewInit {
         return this.getRefinements().controls.length;
     }
 
-    isValuesExist(index: number) {
+    isValuesExist(index: number): number {
         const validationFormGroup = this.getValidations();
         const formGroup = validationFormGroup.at(index) as FormGroup;
+        if (formGroup === undefined) {
+            return 0;
+        }
         const values = formGroup.get('validValues') as FormArray;
         return values.length;
     }
 
-    isRequiredCharacteristicsExist(index: number) {
+    isRequiredCharacteristicsExist(index: number): number {
         const refinementFormGroup = this.getRefinements();
         const formGroup = refinementFormGroup.at(index) as FormGroup;
-        const requiredCharacteristics = formGroup.get(
+        if (formGroup === undefined) {
+            return 0;
+        }
+
+        const requiredCharacteristics = formGroup?.get(
             'requiredCharacteristics'
         ) as FormArray;
+
         return requiredCharacteristics.length;
     }
 
     goBack() {
         this.router.navigate(['characteristicslist']);
+    }
+
+    convertToFormGroup(arrayGroup: any): FormGroup {
+        return arrayGroup as FormGroup;
     }
 }

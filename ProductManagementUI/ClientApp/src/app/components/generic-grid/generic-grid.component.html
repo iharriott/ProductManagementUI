@@ -1,3 +1,15 @@
+<div>
+    <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Filter</mat-label>
+        <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="fiter value"
+            #input
+        />
+    </mat-form-field>
+</div>
+
 <table mat-table [dataSource]="dataSource" matSort>
     <ng-container
         [matColumnDef]="col"
@@ -9,21 +21,31 @@
             mat-sort-header
             class="table-column-header col-width-4"
         >
-            {{ col }}
+            {{ capitalize(col) }}
         </th>
-        <td class="col-width" mat-cell *matCellDef="let row">
-            <div *ngIf="i === 0">
-                <button
-                    class="link-button"
-                    color="primary"
-                    (click)="navigateToDetail(row)"
-                >
+        <div *ngIf="col !== 'action'">
+            <td class="col-width" mat-cell *matCellDef="let row">
+                <div *ngIf="i === 0">
+                    <button
+                        class="link-button"
+                        color="primary"
+                        (click)="navigateToDetail(row)"
+                    >
+                        {{ row[col] }}
+                    </button>
+                </div>
+                <div *ngIf="i !== 0">
                     {{ row[col] }}
-                </button>
-            </div>
-            <div *ngIf="i !== 0">
-                {{ row[col] }}
-            </div>
+                </div>
+            </td>
+        </div>
+        <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+                #c
+                class="table-column-header"
+                (click)="onClick(c.checked, row)"
+                >{{ checkboxLabel }}</mat-checkbox
+            >
         </td>
     </ng-container>
 
@@ -46,7 +68,7 @@
     <div class="col-md-6">
         <mat-paginator
             [hidden]="!dataSource.data.length"
-            [pageSizeOptions]="[5, 10, 25, 100]"
+            [pageSizeOptions]="[15, 25, 35, 50, 100]"
             aria-label="Select page of
         files"
         >

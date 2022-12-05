@@ -34,185 +34,37 @@
         </mat-toolbar-row>
     </mat-toolbar>
     <ng-template #rawCharacteristics>
-        <form [formGroup]="charactersiticsForm">
-            <mat-card>
-                <mat-card-header>
-                    <mat-card-title>
-                        <h1 style="color: #004a9f">Characteristics</h1>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="row">
-                        <mat-form-field
-                            class="example-full-width"
-                            appearance="standard"
-                        >
-                            <mat-label>Schema Version</mat-label>
-                            <input
-                                formControlName="schemaVersion"
-                                matInput
-                                placeholder="SchemaVersion"
-                                value=""
-                            />
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field
-                            class="example-full-width"
-                            appearance="standard"
-                        >
-                            <mat-label>Name</mat-label>
-                            <input
-                                formControlName="name"
-                                matInput
-                                placeholder="Name"
-                                value=""
-                            />
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field
-                            class="example-full-width"
-                            appearance="standard"
-                        >
-                            <mat-label>Data Type</mat-label>
-                            <input
-                                formControlName="dataType"
-                                matInput
-                                placeholder="datatype"
-                                value=""
-                            />
-                        </mat-form-field>
-                    </div>
-                    <div class="row">
-                        <mat-form-field
-                            class="example-full-width"
-                            appearance="standard"
-                        >
-                            <mat-label>Description</mat-label>
-                            <textarea
-                                matInput
-                                formControlName="description"
-                                placeholder="Description"
-                                rows="5"
-                            >
-                            </textarea>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="well" *ngIf="isValidationsExists() > 0">
-                        <div
-                            *ngIf="isValidationsExists() > 0"
-                            formArrayName="validations"
-                            class="form-group"
-                        >
-                            <div
-                                *ngFor="
-                                    let validation of getValidations()
-                                        ?.controls;
-                                    let i = index
-                                "
-                                [formGroupName]="i"
-                            >
-                                <div class="col-sm-9">
-                                    <legend>Validation {{ i + 1 }}</legend>
-                                </div>
-                                <div class="row">
-                                    <mat-form-field
-                                        class="example-full-width"
-                                        appearance="standard"
-                                    >
-                                        <mat-label>Name</mat-label>
-                                        <input
-                                            formControlName="name"
-                                            matInput
-                                            placeholder="Name"
-                                            value=""
-                                        />
-                                    </mat-form-field>
-                                </div>
-                                <div class="row">
-                                    <mat-form-field
-                                        class="example-full-width"
-                                        appearance="standard"
-                                    >
-                                        <mat-label>Validation Type</mat-label>
-                                        <input
-                                            formControlName="validationType"
-                                            matInput
-                                            placeholder="Validation Type"
-                                            value=""
-                                        />
-                                    </mat-form-field>
-                                </div>
-                                <div class="row">
-                                    <mat-form-field
-                                        class="example-full-width"
-                                        appearance="standard"
-                                    >
-                                        <mat-label>Error Message</mat-label>
-                                        <input
-                                            formControlName="errorMessage"
-                                            matInput
-                                            placeholder="Error Message"
-                                            value=""
-                                        />
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="well">
-                                    <div
-                                        *ngIf="isValuesExist(i) > 0"
-                                        formArrayName="validValues"
-                                        class="form-group"
-                                    >
-                                        <div
-                                            *ngFor="
-                                                let validValue of getValidValuesArray(
-                                                    validation
-                                                )?.controls;
-                                                let m = index
-                                            "
-                                        >
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <mat-form-field
-                                                        class="example-full-width"
-                                                        appearance="standard"
-                                                    >
-                                                        <mat-label
-                                                            >Valid
-                                                            Value</mat-label
-                                                        >
-                                                        <input
-                                                            matInput
-                                                            placeholder="Value"
-                                                            value="{{
-                                                                validValue.value
-                                                            }}"
-                                                        />
-                                                    </mat-form-field>
-                                                </div>
-
-                                                &nbsp;&nbsp;
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            <div>
-                <button mat-button color="primary" (click)="goBack()">
-                    <mat-icon>fast_rewind</mat-icon>
-                    Back
-                </button>
-            </div>
-        </form>
+        <app-characteristics-main [formData$]="formData$">
+        </app-characteristics-main>
+        <div *ngIf="isValidationsExists() > 0">
+            <app-validation
+                *ngFor="
+                    let validation of getValidations()?.controls;
+                    let i = index
+                "
+                [validationForm]="convertToFormGroup(validation)"
+                [arrayIndex]="i"
+            >
+            </app-validation>
+        </div>
+        <div>
+            <button mat-button color="primary" (click)="goBack()">
+                <mat-icon>fast_rewind</mat-icon>
+                Back
+            </button>
+        </div>
     </ng-template>
 </div>
+
+<ng-template #refinement>
+    <div *ngIf="isRefinementsExists() > 0">
+        <app-refinement
+            *ngFor="let refinement of getRefinements()?.controls; let i = index"
+            [refinementForm]="convertToFormGroup(refinement)"
+            [arrayIndex]="i"
+        ></app-refinement>
+    </div>
+</ng-template>
 
 <ng-template #rawCharacteristicsJson>
     <pre>
@@ -220,176 +72,8 @@
     </pre>
 </ng-template>
 
-<ng-template #refinement>
-    <form [formGroup]="refinementForm">
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>
-                    <h1 style="color: #004a9f">Refinement</h1>
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="well" *ngIf="isRefinementsExists() > 0">
-                    <div
-                        *ngIf="isRefinementsExists() > 0"
-                        formArrayName="refinements"
-                        class="form-group"
-                    >
-                        <div
-                            *ngFor="
-                                let refinement of getRefinements()?.controls;
-                                let i = index
-                            "
-                            [formGroupName]="i"
-                        >
-                            <div class="col-sm-9">
-                                <legend>Refinement {{ i + 1 }}</legend>
-                            </div>
-
-                            <div class="row">
-                                <mat-form-field
-                                    class="example-full-width"
-                                    appearance="standard"
-                                >
-                                    <mat-label>SchemaVersion</mat-label>
-                                    <input
-                                        formControlName="schemaVersion"
-                                        matInput
-                                        placeholder="SchemaVersion"
-                                        value=""
-                                    />
-                                </mat-form-field>
-                            </div>
-
-                            <div class="row">
-                                <mat-form-field
-                                    class="example-full-width"
-                                    appearance="standard"
-                                >
-                                    <mat-label>Name</mat-label>
-                                    <input
-                                        formControlName="name"
-                                        matInput
-                                        placeholder="Name"
-                                        value=""
-                                    />
-                                </mat-form-field>
-                            </div>
-                            <div class="row">
-                                <mat-form-field
-                                    class="example-full-width"
-                                    appearance="standard"
-                                >
-                                    <mat-label>Refinement Type</mat-label>
-                                    <input
-                                        formControlName="refinementType"
-                                        matInput
-                                        placeholder="Refinement Type"
-                                        value=""
-                                    />
-                                </mat-form-field>
-                            </div>
-                            <div class="row">
-                                <mat-form-field
-                                    class="example-full-width"
-                                    appearance="standard"
-                                >
-                                    <mat-label>Expression</mat-label>
-                                    <textarea
-                                        matInput
-                                        formControlName="expression"
-                                        placeholder="Expression"
-                                        rows="5"
-                                    >
-                                    </textarea>
-                                </mat-form-field>
-                            </div>
-                            <div class="row">
-                                <mat-form-field
-                                    class="example-full-width"
-                                    appearance="standard"
-                                >
-                                    <mat-label>Priority</mat-label>
-                                    <input
-                                        formControlName="priority"
-                                        matInput
-                                        placeholder="Priority"
-                                        value=""
-                                    />
-                                </mat-form-field>
-                            </div>
-
-                            <!-- start loop-->
-
-                            <div class="well">
-                                <div
-                                    *ngIf="
-                                        isRequiredCharacteristicsExist(i) > 0
-                                    "
-                                    formArrayName="requiredCharacteristics"
-                                    class="form-group"
-                                >
-                                    <div class="col-sm-9">
-                                        <legend>
-                                            Required Characteristics
-                                        </legend>
-                                    </div>
-                                    <div
-                                        *ngFor="
-                                            let characteristics of getRequiredCharacteristicsArray(
-                                                refinement
-                                            )?.controls;
-                                            let m = index
-                                        "
-                                        [formGroupName]="m"
-                                    >
-                                        <div class="row">
-                                            <mat-form-field
-                                                class="example-full-width"
-                                                appearance="standard"
-                                            >
-                                                <mat-label
-                                                    >Entity Type</mat-label
-                                                >
-                                                <input
-                                                    matInput
-                                                    placeholder="Value"
-                                                    formControlName="entityType"
-                                                />
-                                            </mat-form-field>
-                                        </div>
-
-                                        <div class="row">
-                                            <mat-form-field
-                                                class="example-full-width"
-                                                appearance="standard"
-                                            >
-                                                <mat-label
-                                                    >Characteristic
-                                                    Name</mat-label
-                                                >
-                                                <input
-                                                    matInput
-                                                    placeholder="Value"
-                                                    formControlName="characteristicName"
-                                                />
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- end loop-->
-                        </div>
-                    </div>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </form>
-</ng-template>
-
 <ng-template #refinementJson>
-    <h1>refinement json</h1>
+    <h4>refinement json</h4>
 </ng-template>
 
 <ng-container #container></ng-container>

@@ -70,19 +70,18 @@ export class FileHistoryListComponent implements OnInit {
     }
 
     onGetFiles(): void {
-        this.apiService.getRateFileHistory(this.fileName, true).subscribe(
-            (data: RatingChanges) => {
+        this.apiService.getRateFileHistory(this.fileName, true).subscribe({
+            next: (data: RatingChanges) => {
                 let history: FileChangeHistory[] = R.pathOr(
                     '',
                     ['result', 'history'],
                     data
                 );
-                console.log(`history ${JSON.stringify(history)}`);
+
                 this.dataService.currentFileHistoryData = data;
                 this.version = data.version;
 
                 this.fileSummaryData = history.map((fileData) => {
-                    console.log(`file data ${JSON.stringify(fileData)}`);
                     return {
                         fileVersionId: fileData.fileVersionId,
                         isLatestVersion: fileData.isLatestVersion,
@@ -102,9 +101,9 @@ export class FileHistoryListComponent implements OnInit {
                     'action'
                 ];
             },
-            (error: any) => console.log(error),
-            () => console.log('Done retrieving file history')
-        );
+            error: (error: any) => console.log(error),
+            complete: () => console.log('Done retrieving file history')
+        });
     }
 
     applyFilter(event: Event) {

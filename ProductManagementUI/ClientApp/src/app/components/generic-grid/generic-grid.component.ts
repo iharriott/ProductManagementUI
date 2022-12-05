@@ -9,6 +9,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -20,17 +21,22 @@ export class GenericGridComponent implements OnInit {
     @Input() tableDataState$!: BehaviorSubject<any>;
     dataSource!: MatTableDataSource<any>;
     displayColumns!: string[];
+    @Input() url!: string;
+    @Input() showCheckbox!: boolean;
+    @Input() checkboxLabel: string = 'view';
     @Input() dataSourceInput!: any[];
     @Input() displayColumnsInput!: string[];
     @Output() linkClicked = new EventEmitter<any>();
+    @Output() checkboxClicked = new EventEmitter<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
-    constructor() {
+    constructor(private router: Router) {
         this.dataSource = new MatTableDataSource();
     }
 
     ngOnInit(): void {
         this.tableDataState$.subscribe((data) => {
+            console.log(`data in generic`);
             this.updateTableData(data);
         });
         this.displayColumns = this.displayColumnsInput;
@@ -56,9 +62,20 @@ export class GenericGridComponent implements OnInit {
         this.paginator?.firstPage();
     }
 
-    goback() {}
+    goback() {
+        this.router.navigate([this.url]);
+    }
 
     navigateToDetail(data) {
         this.linkClicked.emit(data);
+    }
+
+    onClick(state, data) {
+        const obj = { state, data };
+        this.checkboxClicked.emit(obj);
+    }
+
+    capitalize(value: string) {
+        return value && value[0].toUpperCase() + value.slice(1);
     }
 }

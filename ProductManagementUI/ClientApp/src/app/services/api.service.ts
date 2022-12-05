@@ -12,6 +12,7 @@ import { BaseTableResponse } from '../components/interfaces/BaseTableResponse';
 
 import { ProductSearch } from '../components/interfaces/product-search';
 import { ProductDefinitionDetail } from '../components/interfaces/product-definition-detail';
+import { ProductFactorFileContent } from '../components/interfaces/factor-file-content';
 
 @Injectable({
     providedIn: 'root'
@@ -23,23 +24,29 @@ export class ApiService {
 
     getRatingTables(
         fileVersion: string,
-        includeContent: boolean
-    ): Observable<any> {
-        const apiAction = 'GetRatingTables';
-        const version = fileVersion ? fileVersion : this.encodeUri('CW');
-        this.endpoint = `${this.baseUrl}/${apiAction}/${version}?includeContent=${includeContent}`;
-        return this.http.get<any>(this.endpoint);
-    }
-
-    getRatingTablesFilter(
-        fileVersion: string,
         includeContent: boolean,
         fileName?: string
     ): Observable<any> {
         const apiAction = 'GetRatingTables';
-        const version = fileVersion ? fileVersion : this.encodeUri('CW');
-        this.endpoint = `${this.baseUrl}/${apiAction}/${version}?includeContent=${includeContent}?ratingFactorFilter=${fileName}`;
+        const version = fileVersion ? fileVersion : 'CW';
+        if (fileName) {
+            this.endpoint = `${this.baseUrl}/${apiAction}/${version}?includeContent=${includeContent}&ratingFactorFilter=${fileName}`;
+        } else {
+            this.endpoint = `${this.baseUrl}/${apiAction}/${version}?includeContent=${includeContent}`;
+        }
+
         return this.http.get<any>(this.endpoint);
+    }
+
+    getProductDefinitionFileContent(
+        fileVersion: string,
+        fileName?: string
+    ): Observable<ProductFactorFileContent> {
+        const apiAction = 'GetProductDefinitionFileContent';
+        const version = fileVersion ? fileVersion : 'CW';
+        this.endpoint = `${this.baseUrl}/${apiAction}/${version}/${fileName}`;
+
+        return this.http.get<ProductFactorFileContent>(this.endpoint);
     }
 
     getRateFileHistory(
@@ -70,7 +77,7 @@ export class ApiService {
 
     getCharacteristicsDetails(
         characteristic: string,
-        fileVersionId: string,
+        //fileVersionId: string,
         includeContent: boolean
     ): Observable<CharacteristicsRoot> {
         const apiAction = 'GetCharacteristics';

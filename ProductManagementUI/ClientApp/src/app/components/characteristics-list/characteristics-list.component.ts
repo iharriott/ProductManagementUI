@@ -72,8 +72,8 @@ export class CharacteristicsListComponent implements OnInit {
     getCharacteristics(): void {
         this.apiService
             .getCharacteristics(this.rateRevision, false, false)
-            .subscribe(
-                ({ result }) => {
+            .subscribe({
+                next: ({ result }) => {
                     const data = result.map(
                         ({ name, fileVersionId, dataType, state }) => {
                             return {
@@ -94,14 +94,12 @@ export class CharacteristicsListComponent implements OnInit {
                     this.dataSource.data = data;
                     console.log(JSON.stringify(this.displayedColumns));
                 },
-                (error) => {},
-                () => {
+                error: (error) => {},
+                complete: () => {
                     console.log('completed fetching characteristics');
                 }
-            );
+            });
     }
-
-    viewCharacteristics(row) {}
 
     onChange(event, row) {
         const { name, fileVersionId } = row;
@@ -128,5 +126,7 @@ export class CharacteristicsListComponent implements OnInit {
         this.router.navigate(['characteristicdetail']);
     }
 
-    goBack() {}
+    goBack() {
+        this.router.navigate(['statefiling']);
+    }
 }

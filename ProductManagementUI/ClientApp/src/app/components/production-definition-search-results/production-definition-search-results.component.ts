@@ -13,6 +13,7 @@ export class ProductionDefinitionSearchResultsComponent implements OnInit {
     productList: any[] = [];
     dataSource;
     displayColumns = ['product'];
+    backUrl: string = 'productsearch';
     tableData$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
     constructor(
         private dataService: DataService,
@@ -30,8 +31,8 @@ export class ProductionDefinitionSearchResultsComponent implements OnInit {
     GetProductsInFamilyAndState() {
         this.apiService
             .GetProductsInFamilyAndState(this.productSearchData)
-            .subscribe(
-                ({ result }) => {
+            .subscribe({
+                next: ({ result }) => {
                     this.productList = result;
                     this.dataSource = result.map((val) => {
                         return { product: val };
@@ -39,11 +40,11 @@ export class ProductionDefinitionSearchResultsComponent implements OnInit {
                     console.log(JSON.stringify(this.dataSource));
                     this.tableData$.next(this.dataSource);
                 },
-                (error) => {
+                error: (error) => {
                     console.log(error);
                 },
-                () => console.log('completed')
-            );
+                complete: () => console.log('completed')
+            });
     }
 
     goToProducts(event) {
