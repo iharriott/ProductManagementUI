@@ -273,7 +273,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
                 .updateRatingFile(
                     this.fileName,
                     convertedData,
-                    'CW',
+                    this.selectedBranch,
                     this.comment
                 )
                 .subscribe({
