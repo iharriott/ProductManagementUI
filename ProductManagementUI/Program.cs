@@ -9,6 +9,15 @@ builder.Services.AddControllersWithViews();
 builder.WebHost.UseGeicoKestrelDefaults();
 builder.Host.UseGeicoAppConfiguration();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyAllowSpecificOrigins",
+        policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+});
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,7 +30,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseCors("MyAllowSpecificOrigins");
 
 app.MapControllerRoute(
     name: "default",
