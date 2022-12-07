@@ -33,6 +33,8 @@
     [displayColumnsInput]="displayedColumns"
     (linkClicked)="loadData($event)"
     (checkboxClicked)="onChange($event)"
+    (fileHistoryLinkClicked)="viewHistory($event)"
     [url]="backUrl"
     [showCheckbox]="showCheckbox"
+    [viewHistory]="viewFileHistory"
 ></app-generic-grid>

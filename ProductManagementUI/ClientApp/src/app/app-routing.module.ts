@@ -73,7 +73,7 @@ const routes: Routes = [
                 data: { view: 'filehistory' }
             },
             {
-                path: 'viewfilehistory/:fileHistoryId/:fileName',
+                path: 'viewfilehistory/:fileVersionId/:fileName',
                 component: FileUploadComponent,
                 data: { view: 'viewhistory' }
             },

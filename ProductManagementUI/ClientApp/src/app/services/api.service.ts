@@ -77,7 +77,6 @@ export class ApiService {
 
     getCharacteristicsDetails(
         characteristic: string,
-        //fileVersionId: string,
         includeContent: boolean
     ): Observable<CharacteristicsRoot> {
         const apiAction = 'GetCharacteristics';

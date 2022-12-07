@@ -14,6 +14,7 @@ export class MultiEditComponent implements OnInit {
     historyData!: History[];
 
     ngOnInit(): void {
+        debugger;
         this.isListFileData = this.dataService.isListFileData;
         if (this.isListFileData) {
             this.filesList = this.dataService.filesData;

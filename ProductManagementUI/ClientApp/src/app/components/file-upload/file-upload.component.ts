@@ -117,6 +117,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     };
 
     ngOnInit(): void {
+        debugger;
         this.view = this.route.snapshot.data['view'];
         this.isListFileData = this.dataService.isListFileData;
         this.selectedBranch = this.dataService.selectedBranch;
@@ -244,6 +245,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     }
 
     save() {
+        debugger;
         let fileValid;
 
         if (this.fileLoad) {
@@ -393,6 +395,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     }
 
     openDialog() {
+        debugger;
         let message = 'File structure failed validation';
         let firstAppend = false;
         if (this.dataService.headerDiffColumn.length > 0) {

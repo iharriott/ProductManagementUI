@@ -1,8 +1,15 @@
 <mat-tab-group mat-align-tabs="start" *ngIf="isListFileData">
     <div *ngFor="let file of filesList">
-        <mat-tab label="{{ file.fileName }}"
-            ><app-file-upload [filesList]="file"></app-file-upload
-        ></mat-tab>
+        <div *ngIf="file.isHistory">
+            <mat-tab label="{{ file.fileVersionId }}"
+                ><app-file-upload [filesList]="file"></app-file-upload
+            ></mat-tab>
+        </div>
+        <div *ngIf="!file.isHistory">
+            <mat-tab label="{{ file.fileName }}"
+                ><app-file-upload [filesList]="file"></app-file-upload
+            ></mat-tab>
+        </div>
     </div>
 </mat-tab-group>
 

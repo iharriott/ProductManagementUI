@@ -36,7 +36,13 @@
                 File Version ID
             </th>
             <td class="col-width-3" mat-cell *matCellDef="let row">
-                {{ row.fileVersionId }}
+                <button
+                    class="link-button"
+                    color="primary"
+                    (click)="navigateToDetail(row)"
+                >
+                    {{ row.fileVersionId }}
+                </button>
             </td>
         </ng-container>
 
@@ -121,7 +127,9 @@
                 Action
             </th>
             <td mat-cell *matCellDef="let row">
-                <mat-checkbox class="table-column-header" (click)="onClick(row)"
+                <mat-checkbox
+                    class="table-column-header"
+                    (click)="onChange(row)"
                     >View Data
                 </mat-checkbox>
 

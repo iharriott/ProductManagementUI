@@ -46,6 +46,15 @@
                 (click)="onClick(c.checked, row)"
                 >{{ checkboxLabel }}</mat-checkbox
             >
+            <button
+                *ngIf="viewHistory"
+                class="link-button"
+                mat-button
+                color="primary"
+                (click)="viewFileHistory(row)"
+            >
+                View History
+            </button>
         </td>
     </ng-container>
 

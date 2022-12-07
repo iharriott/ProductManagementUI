@@ -53,6 +53,7 @@ export class FileListComponent implements OnInit {
     fileList: any[] = [];
     fontIcon!: string;
     dialogText!: string;
+    viewFileHistory = true;
     displayedColumns = [
         'fileName',
         'lob',
@@ -200,6 +201,4 @@ export class FileListComponent implements OnInit {
         this.dataService.currentFile = fileName;
         this.router.navigate(['filehistory', fileName]);
     }
-
-    goToFiles(event) {}
 }

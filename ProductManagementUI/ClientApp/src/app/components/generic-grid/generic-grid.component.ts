@@ -23,11 +23,13 @@ export class GenericGridComponent implements OnInit {
     displayColumns!: string[];
     @Input() url!: string;
     @Input() showCheckbox!: boolean;
+    @Input() viewHistory: boolean = false;
     @Input() checkboxLabel: string = 'view';
     @Input() dataSourceInput!: any[];
     @Input() displayColumnsInput!: string[];
     @Output() linkClicked = new EventEmitter<any>();
     @Output() checkboxClicked = new EventEmitter<any>();
+    @Output() fileHistoryLinkClicked = new EventEmitter<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
     constructor(private router: Router) {
@@ -77,5 +79,8 @@ export class GenericGridComponent implements OnInit {
 
     capitalize(value: string) {
         return value && value[0].toUpperCase() + value.slice(1);
+    }
+    viewFileHistory(row) {
+        this.fileHistoryLinkClicked.emit(row);
     }
 }

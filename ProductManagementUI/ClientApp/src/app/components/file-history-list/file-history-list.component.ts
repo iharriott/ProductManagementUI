@@ -53,6 +53,7 @@ export class FileHistoryListComponent implements OnInit {
     dateList: any[] = [];
     isTableExpanded = false;
     expandedElement!: ProductDefinitionVersion | null;
+    fileList: any[] = [];
 
     constructor(
         private apiService: ApiService,
@@ -135,8 +136,10 @@ export class FileHistoryListComponent implements OnInit {
     }
 
     onSelect() {
-        this.dataService.isListFileData = false;
-        this.dataService.dateList = this.dateList;
+        this.dataService.filesData = [];
+        this.dataService.isListFileData = true;
+        this.dataService.filesData = this.fileList;
+        //this.dataService.dateList = this.dateList;
         this.router.navigate(['multiview']);
     }
 
@@ -146,5 +149,21 @@ export class FileHistoryListComponent implements OnInit {
         else {
             this.router.navigate(['editfilelist']);
         }
+    }
+
+    navigateToDetail(row) {
+        const { fileVersionId } = row;
+        this.router.navigate(['viewfilehistory', fileVersionId, this.fileName]);
+    }
+
+    onChange(row) {
+        const { fileVersionId } = row;
+        const dataObj = {
+            fileName: this.fileName,
+            fileVersionId: fileVersionId,
+            isHistory: true
+        };
+        this.dataService.selectedBranch = this.selectedBranch;
+        this.fileList = [...this.fileList, dataObj];
     }
 }
